@@ -1,5 +1,3 @@
-import Resource.readResourceAsString
-
 @JvmInline
 value class Item(private val char: Char) {
     fun score(): Int {
@@ -41,22 +39,21 @@ data class Group(val rucksacks: List<Rucksack>) {
 fun main() {
     val fileContents = readResourceAsString("day03.txt")
 
-    val part1 =
+    part1 {
         fileContents
             .lines()
             .filterNotBlank()
             .map { Rucksack.fromString(it) }
             .flatMap { it.duplicates().map(Item::score) }
             .sum()
+    }
 
-    val part2 =
+    part2 {
         fileContents
             .lines()
             .filterNotBlank()
             .map { Rucksack.fromString(it) }
             .windowed(3, 3)
             .sumOf { Group(it).badge().score() }
-
-    println("First Part: $part1")
-    println("Second Part: $part2")
+    }
 }

@@ -1,4 +1,3 @@
-import Resource.readResourceAsString
 import Result.DRAW
 import Result.LOSS
 import Result.WIN
@@ -120,20 +119,19 @@ data class RoundPart2(val theirs: Choice, val result: Result) {
 fun main() {
     val fileContents = readResourceAsString("day02.txt")
 
-    val round1 =
+    part1 {
         fileContents
             .lines()
             .filterNotBlank()
             .map { Round.parse(it) }
             .sumOf { it.mine.score() + it.mine.result(it.theirs).score() }
+    }
 
-    println("First Part: $round1")
-
-    val round2 =
-        fileContents
+    part2 {
+         fileContents
             .lines()
             .filterNotBlank()
             .map { RoundPart2.parse(it) }
             .sumOf { it.theirs.outcome(it.result).score() + it.result.score() }
-    println("Second Part: $round2")
+    }
 }

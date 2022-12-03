@@ -1,5 +1,3 @@
-import Resource.readResourceAsString
-
 fun main() {
     val fileContents = readResourceAsString("day01.txt")
 
@@ -9,6 +7,11 @@ fun main() {
             .map { it.split("\n").filterNotBlank().mapInts().sum() }
             .sortedDescending()
 
-    println("First Part: ${calories.first()}")
-    println("Second Part: ${calories.subList(0, 3).sum()}")
+    part1 {
+        calories.first()
+    }
+
+    part2 {
+        calories.subList(0, 3).sum()
+    }
 }

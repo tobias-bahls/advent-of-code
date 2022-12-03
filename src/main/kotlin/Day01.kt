@@ -7,11 +7,7 @@ fun main() {
             .map { it.split("\n").filterNotBlank().mapInts().sum() }
             .sortedDescending()
 
-    part1 {
-        calories.first()
-    }
+    part1 { calories.first() }
 
-    part2 {
-        calories.subList(0, 3).sum()
-    }
+    part2 { calories.subList(0, 3).sum() }
 }

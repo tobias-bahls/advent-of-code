@@ -121,17 +121,13 @@ fun main() {
 
     part1 {
         fileContents
-            .lines()
-            .filterNotBlank()
-            .map { Round.parse(it) }
+            .parseLines { Round.parse(it) }
             .sumOf { it.mine.score() + it.mine.result(it.theirs).score() }
     }
 
     part2 {
-         fileContents
-            .lines()
-            .filterNotBlank()
-            .map { RoundPart2.parse(it) }
+        fileContents
+            .parseLines { RoundPart2.parse(it) }
             .sumOf { it.theirs.outcome(it.result).score() + it.result.score() }
     }
 }

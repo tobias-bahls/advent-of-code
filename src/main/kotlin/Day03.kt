@@ -41,18 +41,14 @@ fun main() {
 
     part1 {
         fileContents
-            .lines()
-            .filterNotBlank()
-            .map { Rucksack.fromString(it) }
+            .parseLines { Rucksack.fromString(it) }
             .flatMap { it.duplicates().map(Item::score) }
             .sum()
     }
 
     part2 {
         fileContents
-            .lines()
-            .filterNotBlank()
-            .map { Rucksack.fromString(it) }
+            .parseLines { Rucksack.fromString(it) }
             .windowed(3, 3)
             .sumOf { Group(it).badge().score() }
     }

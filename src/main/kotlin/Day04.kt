@@ -2,8 +2,8 @@ data class AssignmentPair(val first: IntRange, val second: IntRange) {
     companion object {
         fun parse(input: String): AssignmentPair {
             val (left, right) =
-                input.split(",").map {
-                    val (start, end) = it.split("-").mapInts()
+                input.twoParts(',') {
+                    val (start, end) = it.twoParts('-').mapInts()
                     IntRange(start, end)
                 }
 

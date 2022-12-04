@@ -11,9 +11,8 @@ fun <T> T.dump(): T = this.also { println(this) }
 
 fun <T> List<T>.sample(): List<T> = this.subList(0, 3).dump()
 
-object Utils
-
-fun readResourceAsString(name: String): String = Utils::class.java.getResource(name)!!.readText()
+fun readResourceAsString(name: String): String =
+    object {}::class.java.getResource(name)!!.readText()
 
 fun <T> String.parseLines(parser: (String) -> T): List<T> =
     this.lines().filterNotBlank().map(parser)

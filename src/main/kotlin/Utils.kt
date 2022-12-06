@@ -23,6 +23,13 @@ fun <T> List<T>.expectSize(expectedSize: Int): List<T> {
     return this
 }
 
+fun <T> List<T>.expectOddSize(): List<T> {
+    check(this.size % 2 == 1) { "Size of list was expected to be odd, was ${this.size}." }
+    return this
+}
+
+fun <T> List<T>.middleElement(): T = this.expectOddSize()[this.size / 2]
+
 fun <T> T.dump(): T = this.also { println(this) }
 
 fun <T> T.dump(prefix: String): T = this.also { println("$prefix: $this") }

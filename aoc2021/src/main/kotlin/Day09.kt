@@ -1,10 +1,8 @@
-package `2021`
-
-import filterNotBlank
-import part1
-import part2
-import readResourceAsString
-import visitAllNodes
+import utils.filterNotBlank
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
+import utils.visitAllNodes
 
 data class Point(val x: Int, val y: Int) {
 
@@ -48,7 +46,7 @@ class Heightmap(input: String) {
 }
 
 fun main() {
-    val input = readResourceAsString("2021/day09.txt")
+    val input = readResourceAsString("/day09.txt")
     val heightmap = Heightmap(input)
 
     part1 { heightmap.lowPoints().sumOf { it.height + 1 } }

@@ -1,3 +1,8 @@
+import utils.parseLines
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
+
 @JvmInline
 value class Item(private val char: Char) {
     fun score(): Int {
@@ -37,7 +42,7 @@ data class Group(val rucksacks: List<Rucksack>) {
 }
 
 fun main() {
-    val fileContents = readResourceAsString("day03.txt")
+    val fileContents = readResourceAsString("/day03.txt")
 
     part1 {
         fileContents

@@ -1,6 +1,11 @@
 import Result.DRAW
 import Result.LOSS
 import Result.WIN
+import utils.expectSize
+import utils.parseLines
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
 
 enum class Result {
     WIN,
@@ -117,7 +122,7 @@ data class RoundPart2(val theirs: Choice, val result: Result) {
 }
 
 fun main() {
-    val fileContents = readResourceAsString("day02.txt")
+    val fileContents = readResourceAsString("/day02.txt")
 
     part1 {
         fileContents

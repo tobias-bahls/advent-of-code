@@ -1,3 +1,5 @@
+package utils
+
 import java.util.Stack
 
 fun List<String>.filterNotBlank() = this.map { it.trim() }.filter { it.isNotBlank() }

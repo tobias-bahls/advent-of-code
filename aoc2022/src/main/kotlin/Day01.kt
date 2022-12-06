@@ -1,5 +1,11 @@
+import utils.filterNotBlank
+import utils.mapInts
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
+
 fun main() {
-    val fileContents = readResourceAsString("day01.txt")
+    val fileContents = readResourceAsString("/day01.txt")
 
     val calories =
         fileContents

@@ -2,24 +2,28 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.21"
+    kotlin("jvm") version "1.7.21" apply false
     id("com.diffplug.spotless") version "6.12.0"
-    application
 }
 
-group = "de.tobias"
+configure<SpotlessExtension> { kotlinGradle { ktfmt().dropboxStyle() } }
 
-version = "1.0-SNAPSHOT"
+allprojects {
+    group = "de.tobias"
+    version = "NONE"
 
-repositories { mavenCentral() }
+    apply(plugin = "com.diffplug.spotless")
 
-dependencies { testImplementation(kotlin("test")) }
+    repositories { mavenCentral() }
+}
 
-tasks.test { useJUnitPlatform() }
+subprojects {
+    apply(plugin = "com.diffplug.spotless")
 
-tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+    tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
 
-configure<SpotlessExtension> {
-    kotlin { ktfmt().dropboxStyle() }
-    kotlinGradle { ktfmt().dropboxStyle() }
+    configure<SpotlessExtension> {
+        kotlin { ktfmt().dropboxStyle() }
+        kotlinGradle { ktfmt().dropboxStyle() }
+    }
 }

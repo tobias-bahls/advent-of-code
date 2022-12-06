@@ -1,3 +1,12 @@
+import utils.fullyContains
+import utils.mapInts
+import utils.overlaps
+import utils.parseLines
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
+import utils.twoParts
+
 data class AssignmentPair(val first: IntRange, val second: IntRange) {
     companion object {
         fun parse(input: String): AssignmentPair {
@@ -16,7 +25,7 @@ data class AssignmentPair(val first: IntRange, val second: IntRange) {
 }
 
 fun main() {
-    val input = readResourceAsString("day04.txt")
+    val input = readResourceAsString("/day04.txt")
     val parsed = input.parseLines { AssignmentPair.parse(it) }
 
     part1 { parsed.count { it.fullyContained() } }

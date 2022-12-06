@@ -1,5 +1,16 @@
-import Part.PART1
-import Part.PART2
+import utils.Part
+import utils.Part.PART1
+import utils.Part.PART2
+import utils.filterNotBlank
+import utils.filterWhitespace
+import utils.mapInts
+import utils.match
+import utils.parseLines
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
+import utils.toPair
+import utils.twoParts
 
 @JvmInline value class Crate(val char: Char)
 
@@ -65,7 +76,7 @@ data class Instruction(val count: Int, val from: Int, val to: Int) {
 }
 
 fun main() {
-    val input = readResourceAsString("day05.txt")
+    val input = readResourceAsString("/day05.txt")
 
     val (rawStack, rawInstructions) = input.twoParts("\n\n").toPair()
     val crates = Crates.parse(rawStack)

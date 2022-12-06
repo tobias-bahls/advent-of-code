@@ -1,10 +1,8 @@
-package `2021`
-
-import filterNotBlank
-import middleElement
-import part1
-import part2
-import readResourceAsString
+import utils.filterNotBlank
+import utils.middleElement
+import utils.part1
+import utils.part2
+import utils.readResourceAsString
 
 enum class CharacterType(val open: Char, val close: Char) {
     PAREN('(', ')'),
@@ -59,7 +57,7 @@ fun validate(input: String): ValidationResult {
 }
 
 fun main() {
-    val input = readResourceAsString("2021/day10.txt")
+    val input = readResourceAsString("/day10.txt")
 
     val validated = input.lines().filterNotBlank().map { validate(it) }
 

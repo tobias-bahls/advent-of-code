@@ -13,6 +13,9 @@ fun String.twoParts(char: Char): List<String> = this.split(char).expectSize(2)
 fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
     this.twoParts(char).map(block).let { (a, b) -> Pair(a, b) }
 
+fun String.match(regex: String): MatchResult.Destructured =
+    regex.toRegex().find(this)?.destructured ?: error("$regex did not match $this")
+
 fun <T> List<T>.expectSize(expectedSize: Int): List<T> {
     check(this.size == expectedSize) { "Size of list was ${this.size}, expected $expectedSize " }
     return this

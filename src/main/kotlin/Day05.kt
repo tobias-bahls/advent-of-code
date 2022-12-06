@@ -55,10 +55,9 @@ data class Crates(val stacks: Map<Int, List<Crate>>) {
 
 data class Instruction(val count: Int, val from: Int, val to: Int) {
     companion object {
-        private val REGEX = """move (\d+) from (\d+) to (\d+)""".toRegex()
 
         fun parse(input: String): Instruction {
-            val (count, from, to) = REGEX.find(input)!!.destructured
+            val (count, from, to) = input.match("""move (\d+) from (\d+) to (\d+)""")
 
             return Instruction(count.toInt(), from.toInt(), to.toInt())
         }

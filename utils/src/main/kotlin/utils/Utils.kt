@@ -10,6 +10,12 @@ fun List<String>.mapInts() = this.map { it.toInt() }
 
 fun <T> List<T>.toPair(): Pair<T, T> = this.expectSize(2).let { (a, b) -> Pair(a, b) }
 
+fun <T> List<T>.applyEach(block: (T) -> Unit): List<T> =
+    this.map {
+        block(it)
+        it
+    }
+
 fun String.twoParts(char: String): List<String> = this.split(char).expectSize(2)
 
 fun String.twoParts(char: Char): List<String> = this.split(char).expectSize(2)
@@ -58,7 +64,7 @@ enum class Part {
     PART2
 }
 
-fun <T> visitAllNodes(initial: T, produceNodes: (T) -> Collection<T>): Collection<T> {
+fun <T> visitAllNodes(initial: List<T>, produceNodes: (T) -> Collection<T>): Collection<T> {
     val visited = mutableSetOf<T>()
     val queue = Stack<T>()
 
@@ -73,4 +79,14 @@ fun <T> visitAllNodes(initial: T, produceNodes: (T) -> Collection<T>): Collectio
     }
 
     return visited
+}
+
+fun Int.times() = (1..this)
+
+fun untilTrue(condition: () -> Boolean): Int {
+    var iterations = 0
+
+    while (!condition()) iterations++
+
+    return iterations
 }

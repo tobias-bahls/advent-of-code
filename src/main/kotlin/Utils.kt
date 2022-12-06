@@ -1,3 +1,5 @@
+import java.util.Stack
+
 fun List<String>.filterNotBlank() = this.map { it.trim() }.filter { it.isNotBlank() }
 
 fun List<Char>.filterWhitespace() = this.filter { !it.isWhitespace() }
@@ -45,4 +47,21 @@ fun <T> part2(block: () -> T) = solve("Part 2", block)
 enum class Part {
     PART1,
     PART2
+}
+
+fun <T> visitAllNodes(initial: T, produceNodes: (T) -> Collection<T>): Collection<T> {
+    val visited = mutableSetOf<T>()
+    val queue = Stack<T>()
+
+    queue += initial
+
+    while (queue.isNotEmpty()) {
+        val elem = queue.pop()
+        if (elem !in visited) {
+            visited += elem
+            queue += produceNodes(elem)
+        }
+    }
+
+    return visited
 }

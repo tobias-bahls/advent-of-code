@@ -1,4 +1,4 @@
-import utils.DumbGraph
+import datastructures.DumbGraph
 import utils.filterNotBlank
 import utils.isLowercase
 import utils.isUppercase

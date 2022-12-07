@@ -36,6 +36,9 @@ data class Point(val x: Int, val y: Int) {
         get() = listOf(left, topLeft, top, topRight, right, bottomRight, bottom, bottomLeft)
 }
 
+fun parsePoint(input: String) =
+    input.match("""(\d+),(\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point(x, y) }
+
 class Grid<T>(input: String, createTile: (Char) -> T) {
     val tiles: List<Tile<T>>
 
@@ -55,4 +58,16 @@ class Grid<T>(input: String, createTile: (Char) -> T) {
     override fun toString(): String {
         return "Grid(tiles=$tiles)"
     }
+}
+
+class SparseGrid(val points: Set<Point>) {
+    val width: Int
+    val height: Int
+
+    init {
+        width = points.maxOf { it.x }
+        height = points.maxOf { it.y }
+    }
+
+    fun hasPoint(x: Int, y: Int): Boolean = points.contains(Point(x, y))
 }

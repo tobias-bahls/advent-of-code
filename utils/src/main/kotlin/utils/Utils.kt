@@ -28,6 +28,8 @@ fun String.isLowercase(): Boolean = this.lowercase() == this
 
 fun String.isUppercase(): Boolean = this.uppercase() == this
 
+fun String.wrap(str: String): String = "${str}${this}${str}"
+
 fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
     this.twoParts(char).map(block).let { (a, b) -> Pair(a, b) }
 

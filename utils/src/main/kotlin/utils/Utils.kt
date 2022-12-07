@@ -16,6 +16,8 @@ fun <T> List<T>.applyEach(block: (T) -> Unit): List<T> =
         it
     }
 
+fun <T> List<T>.firstRest(): Pair<T, List<T>> = Pair(this.first(), this.drop(1))
+
 fun String.twoParts(char: String): List<String> = this.split(char).expectSize(2)
 
 fun String.twoParts(char: Char): List<String> = this.split(char).expectSize(2)
@@ -25,6 +27,8 @@ fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
 
 fun String.match(regex: String): MatchResult.Destructured =
     regex.toRegex().find(this)?.destructured ?: error("$regex did not match $this")
+
+fun MatchResult.Destructured.toPair(): Pair<String, String> = this.toList().toPair()
 
 fun <T> List<T>.expectSize(expectedSize: Int): List<T> {
     check(this.size == expectedSize) { "Size of list was ${this.size}, expected $expectedSize " }
@@ -54,6 +58,8 @@ fun <T> solve(msg: String, block: () -> T) {
     val result = block()
     if (result != Unit) println("$msg: $result")
 }
+
+fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)
 
 fun <T> part1(block: () -> T) = solve("Part 1", block)
 
@@ -90,3 +96,11 @@ fun untilTrue(condition: () -> Boolean): Int {
 
     return iterations
 }
+
+fun <A, B, RA, RB> Pair<A, B>.map(block: (Pair<A, B>) -> Pair<RA, RB>): Pair<RA, RB> = block(this)
+
+fun <A, B, R> Pair<A, B>.mapFirst(block: (A) -> R): Pair<R, B> =
+    Pair(block(this.first), this.second)
+
+fun <A, B, R> Pair<A, B>.mapSecond(block: (B) -> R): Pair<A, R> =
+    Pair(this.first, block(this.second))

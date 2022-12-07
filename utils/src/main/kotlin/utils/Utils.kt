@@ -1,6 +1,8 @@
 package utils
 
 import java.util.Stack
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
 fun List<String>.filterNotBlank() = this.map { it.trim() }.filter { it.isNotBlank() }
 
@@ -58,9 +60,12 @@ fun readResourceAsString(name: String): String =
 fun <T> String.parseLines(parser: (String) -> T): List<T> =
     this.lines().filterNotBlank().map(parser)
 
+@OptIn(ExperimentalTime::class)
 fun <T> solve(msg: String, block: () -> T) {
-    val result = block()
-    if (result != Unit) println("$msg: $result")
+    var result: T
+    val duration = measureTime { result = block() }
+
+    if (result != Unit) println("$msg: $result [⏰ $duration]")
 }
 
 fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)

@@ -27,3 +27,28 @@ fun <T> List<T>.expectOddSize(): List<T> {
 }
 
 fun <T> List<T>.middleElement(): T = this.expectOddSize()[this.size / 2]
+
+fun <E> transpose(xs: List<List<E>>): List<List<E>> {
+    fun <E> List<E>.head(): E = this.first()
+    fun <E> List<E>.tail(): List<E> = this.takeLast(this.size - 1)
+    fun <E> E.append(xs: List<E>): List<E> = listOf(this).plus(xs)
+
+    xs.filter { it.isNotEmpty() }
+        .let { ys ->
+            return when (ys.isNotEmpty()) {
+                true -> ys.map { it.head() }.append(transpose(ys.map { it.tail() }))
+                else -> emptyList()
+            }
+        }
+}
+
+fun List<Int>.median() =
+    sorted().let {
+        if (it.size % 2 == 0) {
+            (it[it.size / 2] + it[it.size / 2 - 1]) / 2
+        } else {
+            it[it.size / 2]
+        }
+    }
+
+fun List<Int>.mean() = sum() / this.size.toDouble()

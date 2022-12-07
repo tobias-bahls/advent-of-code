@@ -66,13 +66,8 @@ class Grid<T>(input: String, createTile: (Char) -> T) {
 }
 
 class SparseGrid(val points: Set<Point>) {
-    val width: Int
-    val height: Int
-
-    init {
-        width = points.maxOf { it.x }
-        height = points.maxOf { it.y }
-    }
+    val width: Int = points.maxOf { it.x }
+    val height: Int = points.maxOf { it.y }
 
     fun hasPoint(x: Int, y: Int): Boolean = points.contains(Point(x, y))
 }

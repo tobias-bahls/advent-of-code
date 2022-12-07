@@ -22,6 +22,10 @@ fun String.twoParts(char: String): List<String> = this.split(char).expectSize(2)
 
 fun String.twoParts(char: Char): List<String> = this.split(char).expectSize(2)
 
+fun String.isLowercase(): Boolean = this.lowercase() == this
+
+fun String.isUppercase(): Boolean = this.uppercase() == this
+
 fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
     this.twoParts(char).map(block).let { (a, b) -> Pair(a, b) }
 
@@ -97,7 +101,10 @@ fun untilTrue(condition: () -> Boolean): Int {
     return iterations
 }
 
-fun <A, B, RA, RB> Pair<A, B>.map(block: (Pair<A, B>) -> Pair<RA, RB>): Pair<RA, RB> = block(this)
+fun <A, B, RA, RB> Pair<A, B>.transform(block: (Pair<A, B>) -> Pair<RA, RB>): Pair<RA, RB> =
+    block(this)
+
+fun <A, R> Pair<A, A>.map(block: (A) -> R): Pair<R, R> = Pair(block(this.first), block(this.second))
 
 fun <A, B, R> Pair<A, B>.mapFirst(block: (A) -> R): Pair<R, B> =
     Pair(block(this.first), this.second)

@@ -1,5 +1,8 @@
 import Instruction.FoldX
 import Instruction.FoldY
+import datastructures.Point
+import datastructures.SparseGrid
+import datastructures.parsePoint
 import kotlin.math.absoluteValue
 import utils.map
 import utils.mapSecond

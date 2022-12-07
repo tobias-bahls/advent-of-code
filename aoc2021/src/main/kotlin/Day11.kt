@@ -1,5 +1,5 @@
-import utils.Grid
-import utils.Tile
+import datastructures.Grid
+import datastructures.Tile
 import utils.applyEach
 import utils.part1
 import utils.part2

@@ -1,4 +1,4 @@
-package utils
+package datastructures
 
 class Graph<N, E> {
     private val _nodes = mutableListOf<Node>()

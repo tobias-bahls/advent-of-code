@@ -1,4 +1,9 @@
-package utils
+package datastructures
+
+import utils.filterNotBlank
+import utils.map
+import utils.match
+import utils.toPair
 
 data class Tile<T>(val grid: Grid<T>, val point: Point, val data: T) {
     fun adjacentOrthogonally(): List<Tile<T>> =

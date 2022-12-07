@@ -1,4 +1,4 @@
-package utils
+package datastructures
 
 open class Tree<N> {
     private val idGen: IDGenerator = IDGenerator()

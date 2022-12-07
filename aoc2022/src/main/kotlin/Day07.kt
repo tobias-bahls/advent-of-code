@@ -2,12 +2,12 @@ import DirectoryEntry.EntryType.DIR
 import datastructures.Tree
 import utils.filterNotBlank
 import utils.firstRest
-import utils.map
 import utils.match
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
 import utils.toPair
+import utils.transform
 
 sealed interface Command {
     companion object {
@@ -67,7 +67,7 @@ data class CommandHistory(val command: Command, val output: Output) {
     companion object {
         fun parse(input: String): CommandHistory {
             val (command, output) =
-                input.lines().firstRest().map { (command, output) ->
+                input.lines().firstRest().transform { (command, output) ->
                     val cmd = Command.parse(command)
 
                     Pair(cmd, cmd.parseOutput(output))

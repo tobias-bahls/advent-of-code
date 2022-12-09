@@ -2,9 +2,9 @@ package datastructures
 
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
-import utils.filterNotBlank
 import utils.map
 import utils.match
+import utils.parseGrid
 import utils.pow
 import utils.toPair
 
@@ -75,30 +75,36 @@ data class Point(val x: Int, val y: Int) {
 
     fun distanceTo(other: Point): Double =
         sqrt((other.x - this.x).pow(2).toDouble() + (other.y - this.y).pow(2))
+
+    override fun toString() = "($x,$y)"
 }
 
 fun parsePoint(input: String) =
     input.match("""(\d+),(\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point(x, y) }
 
 class Grid<T>(input: String, createTile: (Char) -> T) {
-    val tiles: List<Tile<T>>
+    private val _tiles: MutableMap<Point, Tile<T>>
+
+    val tiles: Collection<Tile<T>>
+        get() = _tiles.values
+
     val width: Int
+        get() = _tiles.values.maxOf { it.point.x } + 1
     val height: Int
+        get() = _tiles.values.maxOf { it.point.y } + 1
 
     init {
-        val tiles =
-            input.lines().filterNotBlank().flatMapIndexed { y, row ->
-                row.toCharArray().mapIndexed { x, char ->
-                    Tile(this, Point(x, y), createTile(char))
-                }
-            }
-
-        this.tiles = tiles
-        this.width = tiles.maxOf { it.point.x }
-        this.height = tiles.maxOf { it.point.y }
+        this._tiles =
+            parseGrid(input) { x, y, char -> Tile(this, Point(x, y), createTile(char)) }
+                .associateBy { it.point }
+                .toMutableMap()
     }
 
-    fun tileAt(point: Point) = tiles.firstOrNull { it.point == point }
+    fun tileAt(point: Point) = _tiles[point]
+
+    fun addTile(point: Point, data: T) {
+        this._tiles[point] = Tile(this, point, data)
+    }
 
     override fun toString(): String {
         return "Grid(tiles=$tiles)"

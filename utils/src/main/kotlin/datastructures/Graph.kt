@@ -1,16 +1,18 @@
 package datastructures
 
-class Graph<N, E> {
-    private val _nodes = mutableListOf<Node>()
+import java.util.PriorityQueue
+
+class Graph<I, N, E> {
+    private val _nodes = mutableMapOf<I, Node>()
     val nodes
-        get(): List<Node> = _nodes
+        get(): Set<Node> = _nodes.values.toSet()
 
     inner class Edge(val to: Node, val data: E) {
         fun label(): String {
             return if (data == Unit) "" else data.toString()
         }
     }
-    inner class Node(val id: String, val data: N, private var _edges: MutableList<Edge>) {
+    inner class Node(val id: I, val data: N, private var _edges: MutableList<Edge>) {
         val edges
             get(): List<Edge> = _edges
 
@@ -22,24 +24,39 @@ class Graph<N, E> {
         }
 
         fun label(): String {
-            return if (data == Unit) id else "$id, $data"
+            return if (data == Unit) id.toString() else "$id, $data"
         }
 
         override fun toString(): String {
             return "Node(id='$id', data=$data)"
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Graph<*, *, *>.Node
+
+            if (id != other.id) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return id?.hashCode() ?: 0
+        }
     }
 
-    fun addNode(id: String, data: N): Node {
+    fun addNode(id: I, data: N): Node {
         val node = Node(id, data, mutableListOf())
-        _nodes.add(node)
+        _nodes[id] = node
         return node
     }
 
-    fun upsertNode(id: String, data: N) = findNode(id) ?: addNode(id, data)
+    fun upsertNode(id: I, data: N) = findNode(id) ?: addNode(id, data)
 
-    fun findNode(id: String): Node? = _nodes.find { it.id == id }
-    fun getNode(id: String): Node = findNode(id) ?: error("Could not find node with id [$id]")
+    fun findNode(id: I): Node? = _nodes[id]
+    fun getNode(id: I): Node = findNode(id) ?: error("Could not find node with id [$id]")
 
     fun addBidirectionalEdge(node1: Node, node2: Node, data: E) {
         node1.addEdge(to = node2, data = data)
@@ -53,9 +70,9 @@ class Graph<N, E> {
     fun asGraphvizDot(): String {
         val nodeDescription =
             nodes.flatMap { node ->
-                listOf("${node.id} [label=\"${node.label()}\"]") +
+                listOf("\"${node.id}\" [label=\"${node.label()}\"]") +
                     node.edges.map { edge ->
-                        "${node.id} -> ${edge.to.id} [label=\"${edge.label()}\"]"
+                        "\"${node.id}\" -> \"${edge.to.id}\" [label=\"${edge.label()}\"]"
                     }
             }
 
@@ -83,6 +100,56 @@ class Graph<N, E> {
     }
 }
 
-typealias DumbGraph = Graph<Unit, Unit>
+typealias DumbGraph = Graph<String, Unit, Unit>
 
-typealias DumbNode = Graph<Unit, Unit>.Node
+typealias DumbNode = Graph<String, Unit, Unit>.Node
+
+fun <I, N> dijkstra(
+    start: Graph<I, N, Int>.Node,
+    end: Graph<I, N, Int>.Node,
+): List<Graph<I, N, Int>.Node> {
+    val dist = mutableMapOf<Graph<I, N, Int>.Node, Int>()
+    val prev = mutableMapOf<Graph<I, N, Int>.Node, Graph<I, N, Int>.Node>()
+
+    dist[start] = 0
+    val queue = PriorityQueue(compareBy<Graph<I, N, Int>.Node> { dist[it] })
+    queue.add(start)
+
+    while (queue.isNotEmpty()) {
+        val u = queue.remove()
+        if (u == end) {
+            return reconstructPath(start, end, prev)
+        }
+
+        u.edges.forEach {
+            val alt = dist.getOrDefault(u, Integer.MAX_VALUE) + it.data
+            if (alt < dist.getOrDefault(it.to, Integer.MAX_VALUE)) {
+                dist[it.to] = alt
+                prev[it.to] = u
+                if (it.to !in queue) {
+                    queue.add(it.to)
+                }
+            }
+        }
+    }
+
+    error("Could not find shortest path")
+}
+
+private fun <I, N> reconstructPath(
+    start: Graph<I, N, Int>.Node,
+    end: Graph<I, N, Int>.Node,
+    prev: MutableMap<Graph<I, N, Int>.Node, Graph<I, N, Int>.Node>
+): List<Graph<I, N, Int>.Node> {
+    val path = mutableListOf<Graph<I, N, Int>.Node>()
+
+    var current: Graph<I, N, Int>.Node? = end
+    if (prev[current] != null || current == start) {
+        while (current != null) {
+            path.add(current)
+            current = prev[current]
+        }
+    }
+
+    return path.reversed()
+}

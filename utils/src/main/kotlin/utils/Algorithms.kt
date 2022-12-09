@@ -26,3 +26,8 @@ fun untilTrue(condition: () -> Boolean): Int {
 
     return iterations
 }
+
+fun <T> reduceTimes(n: Int, initial: T, operation: (T) -> T) =
+    1.rangeTo(n).fold(initial) { it, _ -> operation(it) }
+
+fun <T> repeatedList(n: Int, block: () -> T) = 1.rangeTo(n).map { block() }

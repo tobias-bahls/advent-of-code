@@ -1,8 +1,11 @@
 package datastructures
 
+import kotlin.math.absoluteValue
+import kotlin.math.sqrt
 import utils.filterNotBlank
 import utils.map
 import utils.match
+import utils.pow
 import utils.toPair
 
 data class Tile<T>(val grid: Grid<T>, val point: Point, val data: T) {
@@ -40,6 +43,9 @@ data class Tile<T>(val grid: Grid<T>, val point: Point, val data: T) {
 }
 
 data class Point(val x: Int, val y: Int) {
+    val absoluteValue
+        get(): Point = Point(this.x.absoluteValue, this.y.absoluteValue)
+
     val top
         get() = Point(x, y - 1)
     val topLeft
@@ -63,6 +69,12 @@ data class Point(val x: Int, val y: Int) {
         get() = listOf(left, right, top, bottom)
     val neighbours
         get() = listOf(left, topLeft, top, topRight, right, bottomRight, bottom, bottomLeft)
+
+    operator fun minus(other: Point): Point = Point(this.x - other.x, this.y - other.y)
+    operator fun plus(other: Point): Point = Point(this.x + other.x, this.y + other.y)
+
+    fun distanceTo(other: Point): Double =
+        sqrt((other.x - this.x).pow(2).toDouble() + (other.y - this.y).pow(2))
 }
 
 fun parsePoint(input: String) =

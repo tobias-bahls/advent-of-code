@@ -30,3 +30,5 @@ fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)
 fun <T> part1(block: () -> T) = solve("Part 1", block)
 
 fun <T> part2(block: () -> T) = solve("Part 2", block)
+
+const val BLOCK = "█"

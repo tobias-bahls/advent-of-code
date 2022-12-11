@@ -1,5 +1,5 @@
 import utils.fullyContains
-import utils.mapInts
+import utils.map
 import utils.overlaps
 import utils.parseLines
 import utils.part1
@@ -12,7 +12,7 @@ data class AssignmentPair(val first: IntRange, val second: IntRange) {
         fun parse(input: String): AssignmentPair {
             val (left, right) =
                 input.twoParts(',') {
-                    val (start, end) = it.twoParts('-').mapInts()
+                    val (start, end) = it.twoParts('-').map { p -> p.toInt() }
                     IntRange(start, end)
                 }
 

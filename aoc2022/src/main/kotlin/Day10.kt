@@ -3,7 +3,6 @@ import utils.parseLines
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
-import utils.toPair
 import utils.twoParts
 
 sealed class Day10Instruction(val cycles: Int) {
@@ -15,7 +14,7 @@ fun parseDay10Instruction(input: String): Day10Instruction =
     when {
         input == "noop" -> Day10Instruction.Noop
         input.startsWith("addx") ->
-            input.twoParts(" ").toPair().second.let { Day10Instruction.AddX(it.toInt()) }
+            input.twoParts(" ").second.let { Day10Instruction.AddX(it.toInt()) }
         else -> error("Cant parse instruction $input")
     }
 

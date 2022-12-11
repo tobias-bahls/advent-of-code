@@ -9,7 +9,6 @@ import utils.parseLines
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
-import utils.toPair
 import utils.twoParts
 
 @JvmInline value class Crate(val char: Char)
@@ -78,7 +77,7 @@ data class Instruction(val count: Int, val from: Int, val to: Int) {
 fun main() {
     val input = readResourceAsString("/day05.txt")
 
-    val (rawStack, rawInstructions) = input.twoParts("\n\n").toPair()
+    val (rawStack, rawInstructions) = input.twoParts("\n\n")
     val crates = Crates.parse(rawStack)
     val instructions = rawInstructions.parseLines { Instruction.parse(it) }
 

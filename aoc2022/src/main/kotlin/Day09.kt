@@ -12,7 +12,6 @@ import utils.part2
 import utils.readResourceAsString
 import utils.reduceTimes
 import utils.repeatedList
-import utils.toPair
 import utils.twoParts
 
 enum class Direction {
@@ -36,7 +35,6 @@ data class Day09Instruction(val direction: Direction, val steps: Int)
 fun parseInstruction(input: String) =
     input
         .twoParts(" ")
-        .toPair()
         .mapFirst { parseDirection(it) }
         .mapSecond { it.toInt() }
         .let { (dir, steps) -> Day09Instruction(dir, steps) }

@@ -6,14 +6,13 @@ import utils.map
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
-import utils.toPair
 import utils.twoParts
 
 fun buildGraph(sample: String): DumbGraph {
     val graph = DumbGraph()
 
     sample.lines().filterNotBlank().map { line ->
-        val (from, to) = line.twoParts("-").toPair().map { graph.upsertNode(it, Unit) }
+        val (from, to) = line.twoParts("-").map { graph.upsertNode(it, Unit) }
 
         graph.addBidirectionalEdge(from, to, Unit)
     }

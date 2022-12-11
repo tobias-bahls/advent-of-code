@@ -1,8 +1,8 @@
 package utils
 
-fun String.twoParts(char: String): List<String> = this.split(char).expectSize(2)
+fun String.twoParts(char: String): Pair<String, String> = this.split(char).expectSize(2).toPair()
 
-fun String.twoParts(char: Char): List<String> = this.split(char).expectSize(2)
+fun String.twoParts(char: Char): Pair<String, String> = this.split(char).expectSize(2).toPair()
 
 fun String.isLowercase(): Boolean = this.lowercase() == this
 
@@ -17,6 +17,8 @@ fun String.match(regex: String): MatchResult.Destructured =
     regex.toRegex().find(this)?.destructured ?: error("$regex did not match $this")
 
 fun MatchResult.Destructured.toPair(): Pair<String, String> = this.toList().toPair()
+
+fun MatchResult.Destructured.singleMatch(): String = this.toList().expectSize(1).first()
 
 fun <T> String.parseLines(parser: (String) -> T): List<T> =
     this.lines().filterNotBlank().map(parser)

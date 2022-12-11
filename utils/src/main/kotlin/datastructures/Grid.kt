@@ -43,6 +43,10 @@ data class Tile<T>(val grid: Grid<T>, val point: Point, val data: T) {
 }
 
 data class Point(val x: Int, val y: Int) {
+    companion object {
+        val ZERO = Point(0, 0)
+    }
+
     val absoluteValue
         get(): Point = Point(this.x.absoluteValue, this.y.absoluteValue)
 
@@ -80,7 +84,7 @@ data class Point(val x: Int, val y: Int) {
 }
 
 fun parsePoint(input: String) =
-    input.match("""(\d+),(\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point(x, y) }
+    input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point(x, y) }
 
 class Grid<T>(input: String, createTile: (Char) -> T) {
     private val _tiles: MutableMap<Point, Tile<T>>

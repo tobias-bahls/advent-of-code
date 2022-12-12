@@ -2,6 +2,8 @@ package datastructures
 
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
+import utils.Scored
+import utils.genericDijkstra
 import utils.map
 import utils.match
 import utils.parseGrid
@@ -109,6 +111,19 @@ class Grid<T>(input: String, createTile: (Char) -> T) {
     fun addTile(point: Point, data: T) {
         this._tiles[point] = Tile(this, point, data)
     }
+
+    fun dijkstra(start: Tile<T>, end: Tile<T>, score: (Tile<T>, Tile<T>) -> Int) =
+        genericDijkstra(
+            start = start,
+            end = end,
+            neighbours = { tile ->
+                tile.adjacentOrthogonally().map { neighbour ->
+                    Scored(score(tile, neighbour), neighbour)
+                }
+            })
+
+    fun dijkstra(start: Tile<T>, end: Tile<T>, neighbours: (Tile<T>) -> List<Scored<Tile<T>>>) =
+        genericDijkstra(start = start, end = end, neighbours = neighbours)
 
     override fun toString(): String {
         return "Grid(tiles=$tiles)"

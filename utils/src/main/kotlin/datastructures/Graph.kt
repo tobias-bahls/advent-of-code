@@ -1,6 +1,7 @@
 package datastructures
 
-import java.util.PriorityQueue
+import utils.Scored
+import utils.genericDijkstra
 
 class Graph<I, N, E> {
     private val _nodes = mutableMapOf<I, Node>()
@@ -98,58 +99,14 @@ class Graph<I, N, E> {
 
         return inner(start, listOf(start))
     }
+
+    fun dijkstra(start: Graph<I, N, Int>.Node, end: Graph<I, N, Int>.Node) =
+        genericDijkstra(
+            start = start,
+            end = end,
+            neighbours = { it.edges.map { edge -> Scored(edge.data, edge.to) } })
 }
 
 typealias DumbGraph = Graph<String, Unit, Unit>
 
 typealias DumbNode = Graph<String, Unit, Unit>.Node
-
-fun <I, N> dijkstra(
-    start: Graph<I, N, Int>.Node,
-    end: Graph<I, N, Int>.Node,
-): List<Graph<I, N, Int>.Node> {
-    val dist = mutableMapOf<Graph<I, N, Int>.Node, Int>()
-    val prev = mutableMapOf<Graph<I, N, Int>.Node, Graph<I, N, Int>.Node>()
-
-    dist[start] = 0
-    val queue = PriorityQueue(compareBy<Graph<I, N, Int>.Node> { dist[it] })
-    queue.add(start)
-
-    while (queue.isNotEmpty()) {
-        val u = queue.remove()
-        if (u == end) {
-            return reconstructPath(start, end, prev)
-        }
-
-        u.edges.forEach {
-            val alt = dist.getOrDefault(u, Integer.MAX_VALUE) + it.data
-            if (alt < dist.getOrDefault(it.to, Integer.MAX_VALUE)) {
-                dist[it.to] = alt
-                prev[it.to] = u
-                if (it.to !in queue) {
-                    queue.add(it.to)
-                }
-            }
-        }
-    }
-
-    error("Could not find shortest path")
-}
-
-private fun <I, N> reconstructPath(
-    start: Graph<I, N, Int>.Node,
-    end: Graph<I, N, Int>.Node,
-    prev: MutableMap<Graph<I, N, Int>.Node, Graph<I, N, Int>.Node>
-): List<Graph<I, N, Int>.Node> {
-    val path = mutableListOf<Graph<I, N, Int>.Node>()
-
-    var current: Graph<I, N, Int>.Node? = end
-    if (prev[current] != null || current == start) {
-        while (current != null) {
-            path.add(current)
-            current = prev[current]
-        }
-    }
-
-    return path.reversed()
-}

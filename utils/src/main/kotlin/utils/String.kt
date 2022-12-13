@@ -1,8 +1,10 @@
 package utils
 
-fun String.twoParts(char: String): Pair<String, String> = this.split(char).expectSize(2).toPair()
+fun String.twoParts(char: String): Pair<String, String> =
+    this.split(char).expectSize(2).filterNotBlank().toPair()
 
-fun String.twoParts(char: Char): Pair<String, String> = this.split(char).expectSize(2).toPair()
+fun String.twoParts(char: Char): Pair<String, String> =
+    this.split(char).expectSize(2).filterNotBlank().toPair()
 
 fun String.isLowercase(): Boolean = this.lowercase() == this
 

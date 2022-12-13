@@ -1,13 +1,13 @@
-import datastructures.Point
+import datastructures.Point2D
 import kotlin.math.abs
 import utils.parseLines
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
 
-data class Line(val start: Point, val end: Point) {
-    fun points(): List<Point> {
-        val difference = Point(end.x - start.x, end.y - start.y)
+data class Line(val start: Point2D, val end: Point2D) {
+    fun points(): List<Point2D> {
+        val difference = Point2D(end.x - start.x, end.y - start.y)
 
         val distance =
             when {
@@ -33,7 +33,7 @@ data class Line(val start: Point, val end: Point) {
                     else -> error("Unreachable: ${difference.y}")
                 }
 
-            Point(start.x + step * dx, start.y + step * dy)
+            Point2D(start.x + step * dx, start.y + step * dy)
         }
     }
 }
@@ -44,7 +44,9 @@ fun main() {
             line
                 .split(" -> ")
                 .map {
-                    it.split(",").let { (x, y) -> Point(Integer.parseInt(x), Integer.parseInt(y)) }
+                    it.split(",").let { (x, y) ->
+                        Point2D(Integer.parseInt(x), Integer.parseInt(y))
+                    }
                 }
                 .let { (start, end) -> Line(start, end) }
         }

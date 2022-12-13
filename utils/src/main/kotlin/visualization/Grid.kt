@@ -1,7 +1,7 @@
 package visualization
 
 import datastructures.Grid
-import datastructures.Point
+import datastructures.Point2D
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
@@ -14,7 +14,7 @@ import javax.swing.JScrollPane
 import javax.swing.JViewport
 import javax.swing.SwingUtilities
 
-fun <T> visualizeGrid(grid: Grid<T>, path: List<Point> = emptyList(), toChar: (T) -> Char) {
+fun <T> visualizeGrid(grid: Grid<T>, path: List<Point2D> = emptyList(), toChar: (T) -> Char) {
     SwingUtilities.invokeLater {
         val frame = createBasicFrame(1000, 1000)
         val drawableCanvas = DrawableCanvas(3000, 1000)

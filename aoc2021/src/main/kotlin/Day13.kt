@@ -1,14 +1,14 @@
 import Instruction.FoldX
 import Instruction.FoldY
-import datastructures.Point
+import datastructures.Point2D
 import datastructures.SparseGrid
-import datastructures.parsePoint
+import datastructures.parsePoint2D
 import kotlin.math.absoluteValue
 import utils.map
 import utils.mapSecond
 import utils.match
-import utils.part1
 import utils.parseLines
+import utils.part1
 import utils.part2
 import utils.readResourceAsString
 import utils.toPair
@@ -30,25 +30,25 @@ fun parseInstruction(input: String): Instruction {
     }
 }
 
-fun applyInstruction(points: Set<Point>, instruction: Instruction): Set<Point> {
+fun applyInstruction(points: Set<Point2D>, instruction: Instruction): Set<Point2D> {
     return when (instruction) {
         is FoldX -> foldAlongX(points, instruction.at)
         is FoldY -> foldAlongY(points, instruction.at)
     }
 }
 
-fun foldAlongY(points: Set<Point>, at: Int): Set<Point> {
+fun foldAlongY(points: Set<Point2D>, at: Int): Set<Point2D> {
     val (toFold, remaining) = points.partition { it.y > at }.map { it.toSet() }
 
-    val folded = toFold.map { Point(it.x, (it.y - at * 2).absoluteValue) }.toSet()
+    val folded = toFold.map { Point2D(it.x, (it.y - at * 2).absoluteValue) }.toSet()
 
     return remaining + folded
 }
 
-fun foldAlongX(points: Set<Point>, at: Int): Set<Point> {
+fun foldAlongX(points: Set<Point2D>, at: Int): Set<Point2D> {
     val (toFold, remaining) = points.partition { it.x > at }.map { it.toSet() }
 
-    val folded = toFold.map { Point((it.x - at * 2).absoluteValue, it.y) }.toSet()
+    val folded = toFold.map { Point2D((it.x - at * 2).absoluteValue, it.y) }.toSet()
 
     return remaining + folded
 }
@@ -58,7 +58,7 @@ fun main() {
 
     val (gridInput, instructionsInput) = input.twoParts("\n\n")
 
-    val points = gridInput.parseLines { parsePoint(it) }.toSet()
+    val points = gridInput.parseLines { parsePoint2D(it) }.toSet()
     val instructions = instructionsInput.parseLines { parseInstruction(it) }
 
     part1 {

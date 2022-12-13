@@ -2,7 +2,7 @@ import Direction.DOWN
 import Direction.LEFT
 import Direction.RIGHT
 import Direction.UP
-import datastructures.Point
+import datastructures.Point2D
 import utils.clamp
 import utils.mapFirst
 import utils.mapSecond
@@ -39,7 +39,7 @@ fun parseInstruction(input: String) =
         .mapSecond { it.toInt() }
         .let { (dir, steps) -> Day09Instruction(dir, steps) }
 
-data class Rope(val segments: List<Point>) {
+data class Rope(val segments: List<Point2D>) {
     val head
         get() = segments.first()
     val last
@@ -48,7 +48,7 @@ data class Rope(val segments: List<Point>) {
         get() = segments.drop(1)
 }
 
-private fun moveHead(instruction: Day09Instruction, head: Point): Point =
+private fun moveHead(instruction: Day09Instruction, head: Point2D): Point2D =
     when (instruction.direction) {
         UP -> head.top
         RIGHT -> head.right
@@ -56,7 +56,7 @@ private fun moveHead(instruction: Day09Instruction, head: Point): Point =
         LEFT -> head.left
     }
 
-fun moveTail(tail: Point, newHead: Point): Point {
+fun moveTail(tail: Point2D, newHead: Point2D): Point2D {
     val distance = tail.distanceTo(newHead)
     if (distance < 2) {
         return tail
@@ -64,11 +64,11 @@ fun moveTail(tail: Point, newHead: Point): Point {
 
     val delta = tail.minus(newHead)
     return when {
-        delta.y == 0 && delta.x > 0 -> tail + Point(-1, 0)
-        delta.y == 0 && delta.x < 0 -> tail + Point(1, 0)
-        delta.x == 0 && delta.y > 0 -> tail + Point(0, -1)
-        delta.x == 0 && delta.y < 0 -> tail + Point(0, 1)
-        else -> tail - Point(delta.x.clamp(-1, 1), delta.y.clamp(-1, 1))
+        delta.y == 0 && delta.x > 0 -> tail + Point2D(-1, 0)
+        delta.y == 0 && delta.x < 0 -> tail + Point2D(1, 0)
+        delta.x == 0 && delta.y > 0 -> tail + Point2D(0, -1)
+        delta.x == 0 && delta.y < 0 -> tail + Point2D(0, 1)
+        else -> tail - Point2D(delta.x.clamp(-1, 1), delta.y.clamp(-1, 1))
     }
 }
 
@@ -102,12 +102,12 @@ fun main() {
     val instructions = input.parseLines { parseInstruction(it) }
 
     part1 {
-        val initialRope = Rope(repeatedList(2) { Point(0, 0) })
+        val initialRope = Rope(repeatedList(2) { Point2D(0, 0) })
         applyAllInstructions(instructions, initialRope).map { it.last }.distinct().size
     }
 
     part2 {
-        val initialRope = Rope(repeatedList(10) { Point(0, 0) })
+        val initialRope = Rope(repeatedList(10) { Point2D(0, 0) })
         applyAllInstructions(instructions, initialRope).map { it.last }.distinct().size
     }
 }

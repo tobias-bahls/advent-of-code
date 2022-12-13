@@ -1,4 +1,4 @@
-import datastructures.Point
+import datastructures.Point2D
 import kotlin.math.absoluteValue
 import utils.match
 import utils.part1
@@ -6,7 +6,7 @@ import utils.part2
 
 private data class TargetArea(val x: IntRange, val y: IntRange)
 
-private fun step(point: Point, velocity: Point): Pair<Point, Point> {
+private fun step(point: Point2D, velocity: Point2D): Pair<Point2D, Point2D> {
     val newPoint = point + velocity
     val newX =
         when {
@@ -15,14 +15,14 @@ private fun step(point: Point, velocity: Point): Pair<Point, Point> {
             else -> velocity.x + 1
         }
 
-    val newVelocity = Point(x = newX, y = velocity.y - 1)
+    val newVelocity = Point2D(x = newX, y = velocity.y - 1)
 
     return Pair(newPoint, newVelocity)
 }
 
 private fun hitsTargetArea(
-    initialPoint: Point,
-    initialVelocity: Point,
+    initialPoint: Point2D,
+    initialVelocity: Point2D,
     targetArea: TargetArea
 ): Boolean {
     var velocity = initialVelocity
@@ -58,9 +58,9 @@ fun main() {
 
         (-maxYAbs..maxXAbs)
             .flatMap { yVelocity ->
-                (-maxXAbs..maxXAbs).map { xVelocity -> Point(xVelocity, yVelocity) }
+                (-maxXAbs..maxXAbs).map { xVelocity -> Point2D(xVelocity, yVelocity) }
             }
-            .filter { hitsTargetArea(Point(0, 0), it, targetArea) }
+            .filter { hitsTargetArea(Point2D(0, 0), it, targetArea) }
             .size
     }
 }

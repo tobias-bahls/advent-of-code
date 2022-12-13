@@ -1,5 +1,5 @@
 import datastructures.Grid
-import datastructures.Point
+import datastructures.Point2D
 import datastructures.Tile
 import utils.part1
 import utils.part2
@@ -20,7 +20,7 @@ fun enlargeGrid(grid: Grid<Int>) {
         (1..4).map { n ->
             val newRisk = calculateNewRisk(tile, n)
 
-            val p1 = Point(tile.point.x + originalWidth * n, tile.point.y)
+            val p1 = Point2D(tile.point.x + originalWidth * n, tile.point.y)
             grid.addTile(p1, newRisk)
         }
     }
@@ -30,16 +30,16 @@ fun enlargeGrid(grid: Grid<Int>) {
         (1..4).map { n ->
             val newRisk = calculateNewRisk(tile, n)
 
-            val p1 = Point(tile.point.x, tile.point.y + originalHeight * n)
+            val p1 = Point2D(tile.point.x, tile.point.y + originalHeight * n)
             grid.addTile(p1, newRisk)
         }
     }
 }
 
 fun solve(grid: Grid<Int>): Int {
-    val start = grid.tileAt(Point(0, 0)) ?: error("Could not find start point")
+    val start = grid.tileAt(Point2D(0, 0)) ?: error("Could not find start point")
     val end =
-        grid.tileAt(Point(grid.width - 1, grid.height - 1)) ?: error("Could not find end point")
+        grid.tileAt(Point2D(grid.width - 1, grid.height - 1)) ?: error("Could not find end point")
 
     val dijkstra =
         grid.dijkstra(start, end) { _, neighbour -> neighbour.data } ?: error("No shortest path")

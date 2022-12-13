@@ -12,10 +12,12 @@ import com.github.h0tk3y.betterParse.parser.Parser
 import io.kotest.matchers.shouldBe
 import kotlin.math.ceil
 import kotlin.math.floor
+import utils.Test
 import utils.parseLines
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
+import utils.runTests
 
 private sealed class SnailfishNumber {
 
@@ -150,7 +152,8 @@ private fun parseSnailfishNumber(input: String): SnailfishNumber {
 }
 
 fun main() {
-    executeTests()
+    runTests()
+
     val input = readResourceAsString("/day18.txt")
 
     part1 {
@@ -173,14 +176,7 @@ fun main() {
     }
 }
 
-private fun executeTests() {
-    testExplode()
-    testSplit()
-    testReduction()
-    testSumOfSums()
-    testMagnitude()
-}
-
+@Test
 private fun testExplode() {
     mapOf(
             "[[[[[9,8],1],2],3],4]" to "[[[[0,9],2],3],4]",
@@ -197,6 +193,7 @@ private fun testExplode() {
     println("✅ Explode tests")
 }
 
+@Test
 private fun testSplit() {
     mapOf("[11,1]" to "[[5,6],1]")
         .map { (k, v) -> parseSnailfishNumber(k) to parseSnailfishNumber(v) }
@@ -208,6 +205,7 @@ private fun testSplit() {
     println("✅ Split tests")
 }
 
+@Test
 private fun testReduction() {
     val a = parseSnailfishNumber("[[[[4,3],4],4],[7,[[8,4],9]]]")
     val b = parseSnailfishNumber("[1,1]")
@@ -217,13 +215,7 @@ private fun testReduction() {
     println("✅ Reduction test")
 }
 
-private fun testSumOfSums() {
-    testSumOfSums1()
-    testSumOfSums2()
-
-    testComplexSumOfSums()
-}
-
+@Test
 private fun testSumOfSums1() {
     val sample =
         """
@@ -240,6 +232,7 @@ private fun testSumOfSums1() {
     println("✅ Sum of sums #1")
 }
 
+@Test
 private fun testSumOfSums2() {
     val sample =
         """
@@ -258,6 +251,7 @@ private fun testSumOfSums2() {
     println("✅ Sum of sums #2")
 }
 
+@Test
 private fun testComplexSumOfSums() {
     val sample =
         """[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]
@@ -281,7 +275,8 @@ private fun testComplexSumOfSums() {
     println("✅ Complex sum of sums")
 }
 
-fun testMagnitude() {
+@Test
+private fun magnitude() {
     mapOf(
             "[[1,2],[[3,4],5]]" to 143,
             "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]" to 1384,

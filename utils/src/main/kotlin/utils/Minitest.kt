@@ -13,7 +13,7 @@ inline fun runTests() {
 
 fun runTestsInFile(fileClass: Class<*>) {
     val testMethods =
-        fileClass.methods.filter { method ->
+        fileClass.declaredMethods.filter { method ->
             method.annotations.any { it.annotationClass == Test::class }
         }
 
@@ -23,6 +23,7 @@ fun runTestsInFile(fileClass: Class<*>) {
 
     val successes =
         testMethods.sumOf {
+            it.isAccessible = true
             val testName = it.name
             val result = runCatching { it.invoke(fileClass) }
 

@@ -81,9 +81,21 @@ class Grid<T>(input: String, createTile: (Char) -> T) {
     }
 }
 
-class SparseGrid(val points: Set<Point2D>) {
+class SparseGrid(initialPoints: Set<Point2D>) {
+    private var _points: MutableSet<Point2D>
+    init {
+        _points = initialPoints.toMutableSet()
+    }
     val width: Int = points.maxOf { it.x }
     val height: Int = points.maxOf { it.y }
 
-    fun hasPoint(x: Int, y: Int): Boolean = points.contains(Point2D(x, y))
+    val points: Set<Point2D>
+        get() = _points
+
+    fun hasPoint(x: Int, y: Int): Boolean = hasPoint(Point2D(x, y))
+    fun hasPoint(point: Point2D): Boolean = points.contains(point)
+
+    fun addPoint(point: Point2D) {
+        _points.add(point)
+    }
 }

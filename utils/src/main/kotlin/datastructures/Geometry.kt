@@ -48,5 +48,7 @@ data class Point2D(val x: Int, val y: Int) {
     override fun toString() = "($x,$y)"
 }
 
+data class Line(val from: Point2D, val to: Point2D)
+
 fun parsePoint2D(input: String) =
     input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }

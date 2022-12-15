@@ -45,6 +45,9 @@ data class Point2D(val x: Int, val y: Int) {
     fun distanceTo(other: Point2D): Double =
         sqrt((other.x - this.x).pow(2).toDouble() + (other.y - this.y).pow(2))
 
+    fun manhattanDistanceTo(other: Point2D): Int =
+        (this.x - other.x).absoluteValue + (this.y - other.y).absoluteValue
+
     override fun toString() = "($x,$y)"
 }
 

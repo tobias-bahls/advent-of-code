@@ -14,6 +14,29 @@ import javax.swing.JScrollPane
 import javax.swing.JViewport
 import javax.swing.SwingUtilities
 
+fun visualizePoints(points: List<Point2D>) {
+    SwingUtilities.invokeLater {
+        val frame = createBasicFrame(1000, 1000)
+        val drawableCanvas = DrawableCanvas(3000, 1000)
+        val jScrollPane = JScrollPane(drawableCanvas)
+        jScrollPane.viewport.scrollMode = JViewport.SIMPLE_SCROLL_MODE
+        jScrollPane.preferredSize = Dimension(1000, 1000)
+        frame.contentPane.add(jScrollPane, BorderLayout.CENTER)
+        frame.pack()
+
+        val xOffs = 10
+        val yOffs = 500
+
+        val box = 10
+
+        points.forEach {
+            val (x, y) = it
+
+            drawableCanvas.drawString(x * box + xOffs, y * -1 * box + yOffs, "@")
+        }
+    }
+}
+
 fun <T> visualizeGrid(grid: Grid<T>, path: List<Point2D> = emptyList(), toChar: (T) -> Char) {
     SwingUtilities.invokeLater {
         val frame = createBasicFrame(1000, 1000)

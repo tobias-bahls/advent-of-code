@@ -56,3 +56,12 @@ fun List<Int>.median() =
 fun List<Int>.mean() = sum() / this.size.toDouble()
 
 fun BitSet.toIntSet() = stream().toArray().toSet()
+
+fun <T> Sequence<T>.cycle(): Sequence<T> = generateSequence(this) { this }.flatten()
+
+fun <T> List<T>.cycle(): Sequence<T> = this.asSequence().cycle()
+
+data class Indexed<T>(val elem: T, val index: Int)
+
+fun <T> List<T>.zipWithIndex(): List<Indexed<T>> =
+    this.zip(indices).map { (elem, index) -> Indexed(elem, index) }

@@ -110,3 +110,39 @@ class Graph<I, N, E> {
 typealias DumbGraph = Graph<String, Unit, Unit>
 
 typealias DumbNode = Graph<String, Unit, Unit>.Node
+
+fun <I, N> Graph<I, N, Int>.floydWarshall():
+    Map<Graph<I, N, Int>.Node, Map<Graph<I, N, Int>.Node, Int>> {
+    val result = mutableMapOf<Graph<I, N, Int>.Node, MutableMap<Graph<I, N, Int>.Node, Int>>()
+
+    nodes.forEach { node ->
+        val thisNode = result[node] ?: mutableMapOf()
+
+        node.edges.forEach { thisNode[it.to] = it.data }
+
+        thisNode[node] = 0
+        result[node] = thisNode
+    }
+
+    nodes.forEach { k ->
+        val kNodes = result.getValue(k)
+        nodes.forEach { i ->
+            val iNodes = result.getValue(i)
+            val ikDistance = iNodes[k]
+
+            nodes.forEach { j ->
+                val ijDistance = iNodes[j] ?: Integer.MAX_VALUE
+                val kjDistance = kNodes[j]
+
+                if (ikDistance != null &&
+                    kjDistance != null &&
+                    ijDistance > ikDistance + kjDistance) {
+
+                    iNodes[j] = ikDistance + kjDistance
+                }
+            }
+        }
+    }
+
+    return result
+}

@@ -65,3 +65,10 @@ data class Indexed<T>(val elem: T, val index: Int)
 
 fun <T> List<T>.zipWithIndex(): List<Indexed<T>> =
     this.zip(indices).map { (elem, index) -> Indexed(elem, index) }
+
+fun <T, R : Comparable<R>> Collection<T>.toRangeBy(comparable: (T) -> R): ClosedRange<R> {
+    val min = minOf(comparable)
+    val max = maxOf(comparable)
+
+    return (min..max)
+}

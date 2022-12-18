@@ -77,3 +77,30 @@ private fun <T> reconstructPath(start: T, end: T, prev: MutableMap<T, T>): List<
 
     return path.reversed()
 }
+
+fun <T> floodFill(
+    initial: T,
+    determineNeighbours: (T) -> List<T>,
+    extraStopConditions: List<(T) -> Boolean> = listOf { _ -> false }
+): Set<T> {
+    val queue = ArrayDeque<T>()
+    val visited = mutableSetOf<T>()
+
+    queue.add(initial)
+
+    while (queue.isNotEmpty()) {
+        val elem = queue.removeFirst()
+
+        if (elem in visited) {
+            continue
+        }
+        if (extraStopConditions.any { it(elem) }) {
+            continue
+        }
+
+        visited += elem
+        determineNeighbours(elem).forEach { queue.addLast(it) }
+    }
+
+    return visited.toSet()
+}

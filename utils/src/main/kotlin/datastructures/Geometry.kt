@@ -55,3 +55,49 @@ data class Line(val from: Point2D, val to: Point2D)
 
 fun parsePoint2D(input: String) =
     input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }
+
+data class Point3D(val x: Int, val y: Int, val z: Int) {
+    fun rotate(rotationMatrix: Array<IntArray>): Point3D {
+        return Point3D(
+            rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z,
+            rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z,
+            rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z,
+        )
+    }
+
+    val neighboursOrthogonally
+        get() =
+            listOf(
+                    Point3D(-1, 0, 0),
+                    Point3D(1, 0, 0),
+                    Point3D(0, 1, 0),
+                    Point3D(0, -1, 0),
+                    Point3D(0, 0, 1),
+                    Point3D(0, 0, -1),
+                )
+                .map { this + it }
+
+    fun translate(translation: Point3D): Point3D {
+        return Point3D(
+            this.x + translation.x,
+            this.y + translation.y,
+            this.z + translation.z,
+        )
+    }
+
+    fun negate(): Point3D {
+        return Point3D(-x, -y, -z)
+    }
+
+    operator fun plus(other: Point3D) = translate(other)
+    operator fun minus(other: Point3D) = translate(other.negate())
+
+    override fun toString() = "($x,$y,$z)"
+}
+
+fun parsePoint3D(input: String) =
+    input
+        .match("""(-?\d+),(-?\d+),(-?\d+)""")
+        .toList()
+        .map { it.toInt() }
+        .let { (x, y, z) -> Point3D(x, y, z) }

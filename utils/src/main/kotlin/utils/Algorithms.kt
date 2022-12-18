@@ -83,23 +83,19 @@ fun <T> floodFill(
     determineNeighbours: (T) -> List<T>,
     extraStopConditions: List<(T) -> Boolean> = listOf { _ -> false }
 ): Set<T> {
-    val queue = ArrayDeque<T>()
     val visited = mutableSetOf<T>()
 
-    queue.add(initial)
-
-    while (queue.isNotEmpty()) {
-        val elem = queue.removeFirst()
-
+    queue(initial) { elem ->
         if (elem in visited) {
-            continue
+            return@queue skip()
         }
         if (extraStopConditions.any { it(elem) }) {
-            continue
+            return@queue skip()
         }
 
         visited += elem
-        determineNeighbours(elem).forEach { queue.addLast(it) }
+
+        enqueue(determineNeighbours(elem))
     }
 
     return visited.toSet()

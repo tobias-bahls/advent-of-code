@@ -72,3 +72,6 @@ fun <T, R : Comparable<R>> Collection<T>.toRangeBy(comparable: (T) -> R): Closed
 
     return (min..max)
 }
+
+fun <T, R> Collection<T>.cartesian(other: Collection<R>): Sequence<Pair<T, R>> =
+    this.asSequence().flatMap { a -> other.asSequence().map { b -> a to b } }

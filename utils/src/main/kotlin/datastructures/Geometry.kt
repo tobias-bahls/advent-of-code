@@ -57,11 +57,11 @@ fun parsePoint2D(input: String) =
     input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }
 
 data class Point3D(val x: Int, val y: Int, val z: Int) {
-    fun rotate(rotationMatrix: Array<IntArray>): Point3D {
+    fun transform(matrix: Array<IntArray>): Point3D {
         return Point3D(
-            rotationMatrix[0][0] * x + rotationMatrix[0][1] * y + rotationMatrix[0][2] * z,
-            rotationMatrix[1][0] * x + rotationMatrix[1][1] * y + rotationMatrix[1][2] * z,
-            rotationMatrix[2][0] * x + rotationMatrix[2][1] * y + rotationMatrix[2][2] * z,
+            matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z,
+            matrix[1][0] * x + matrix[1][1] * y + matrix[1][2] * z,
+            matrix[2][0] * x + matrix[2][1] * y + matrix[2][2] * z,
         )
     }
 
@@ -88,6 +88,11 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
     fun negate(): Point3D {
         return Point3D(-x, -y, -z)
     }
+
+    fun manhattanDistanceTo(other: Point3D): Int =
+        (this.x - other.x).absoluteValue +
+            (this.y - other.y).absoluteValue +
+            (this.z - other.z).absoluteValue
 
     operator fun plus(other: Point3D) = translate(other)
     operator fun minus(other: Point3D) = translate(other.negate())

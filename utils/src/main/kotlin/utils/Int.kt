@@ -38,3 +38,5 @@ fun Int.lcm(other: Int): Int {
         ((this / this.gcd(other)) * other).absoluteValue
     }
 }
+
+fun Int.oneBasedModulo(n: Int) = ((this - 1) % n) + 1

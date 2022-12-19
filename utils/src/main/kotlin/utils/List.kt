@@ -74,7 +74,10 @@ fun <T, R : Comparable<R>> Collection<T>.toRangeBy(comparable: (T) -> R): Closed
 }
 
 fun <T, R> Iterable<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
-    this.asSequence().flatMap { a -> other.asSequence().map { b -> a to b } }
+    this.asSequence().cartesian(other)
+
+fun <T, R> Sequence<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
+    this.flatMap { a -> other.asSequence().map { b -> a to b } }
 
 fun List<Boolean>.interpretAsBinary() =
     joinToString("") {

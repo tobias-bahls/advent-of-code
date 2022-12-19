@@ -18,9 +18,14 @@ fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
 fun String.match(regex: String): MatchResult.Destructured =
     regex.toRegex().find(this)?.destructured ?: error("$regex did not match $this")
 
+fun String.matchOrNull(regex: String): MatchResult.Destructured? =
+    regex.toRegex().find(this)?.destructured
+
 fun MatchResult.Destructured.toPair(): Pair<String, String> = this.toList().toPair()
 
 fun MatchResult.Destructured.singleMatch(): String = this.toList().expectSize(1).first()
+
+fun MatchResult.Destructured?.singleMatchOrNull(): String? = this?.toList()?.firstOrNull()
 
 fun <T> String.parseLines(parser: (String) -> T): List<T> =
     this.lines().filterNotBlank().map(parser)

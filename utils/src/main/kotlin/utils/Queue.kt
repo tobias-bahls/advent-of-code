@@ -12,6 +12,7 @@ sealed interface QueueOperation<in T> {
 }
 
 class QueueOperations<T> {
+    fun enqueue(elem: T) = QueueOperation.Enqueue(listOf(elem))
     fun enqueue(elems: Collection<T>) = QueueOperation.Enqueue(elems)
     fun skip() = QueueOperation.Skip
     fun exit() = QueueOperation.Exit

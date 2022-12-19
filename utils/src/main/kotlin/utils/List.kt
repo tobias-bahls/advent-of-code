@@ -73,5 +73,15 @@ fun <T, R : Comparable<R>> Collection<T>.toRangeBy(comparable: (T) -> R): Closed
     return (min..max)
 }
 
-fun <T, R> Collection<T>.cartesian(other: Collection<R>): Sequence<Pair<T, R>> =
+fun <T, R> Iterable<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
     this.asSequence().flatMap { a -> other.asSequence().map { b -> a to b } }
+
+fun List<Boolean>.interpretAsBinary() =
+    joinToString("") {
+            if (it) {
+                "1"
+            } else {
+                "0"
+            }
+        }
+        .toInt(2)

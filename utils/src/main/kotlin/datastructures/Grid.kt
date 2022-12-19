@@ -2,10 +2,11 @@ package datastructures
 
 import utils.Scored
 import utils.genericDijkstra
-import utils.map
 import utils.parseGrid
 
-data class Tile<T>(val grid: Grid<T>, val point: Point2D, val data: T) {
+data class Tile<T>(val point: Point2D, val data: T) {
+    lateinit var grid: Grid<T>
+
     val above: Tile<T>?
         get() = grid.tileAt(point.top)
 
@@ -39,8 +40,18 @@ data class Tile<T>(val grid: Grid<T>, val point: Point2D, val data: T) {
     }
 }
 
-class Grid<T>(input: String, createTile: (Char) -> T) {
+class Grid<T>(tiles: List<Tile<T>>) {
     private val _tiles: MutableMap<Point2D, Tile<T>>
+
+    init {
+        _tiles = tiles.associateBy { it.point }.toMutableMap()
+        _tiles.values.onEach { it.grid = this }
+    }
+
+    constructor(
+        input: String,
+        createTile: (Char) -> T
+    ) : this(parseGrid<Tile<T>>(input) { x, y, char -> Tile<T>(Point2D(x, y), createTile(char)) })
 
     val tiles: Collection<Tile<T>>
         get() = _tiles.values
@@ -50,17 +61,12 @@ class Grid<T>(input: String, createTile: (Char) -> T) {
     val height: Int
         get() = _tiles.values.maxOf { it.point.y } + 1
 
-    init {
-        this._tiles =
-            parseGrid(input) { x, y, char -> Tile(this, Point2D(x, y), createTile(char)) }
-                .associateBy { it.point }
-                .toMutableMap()
-    }
-
     fun tileAt(point: Point2D) = _tiles[point]
 
     fun addTile(point: Point2D, data: T) {
-        this._tiles[point] = Tile(this, point, data)
+        val tile = Tile(point, data)
+        tile.grid = this
+        this._tiles[point] = tile
     }
 
     fun dijkstra(start: Tile<T>, end: Tile<T>, score: (Tile<T>, Tile<T>) -> Int) =

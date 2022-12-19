@@ -13,6 +13,7 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JViewport
 import javax.swing.SwingUtilities
+import utils.BLOCK
 
 fun visualizePoints(points: List<Point2D>) {
     SwingUtilities.invokeLater {
@@ -115,4 +116,24 @@ private fun createBasicFrame(width: Int, height: Int): JFrame {
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
     frame.isVisible = true
     return frame
+}
+
+fun <T> Grid<T>.toAscii(toChar: (T?) -> Char): String {
+    return (0 until height).joinToString("\n") { y ->
+        (0 until width)
+            .map { x ->
+                val tileData = tileAt(Point2D(x, y))?.data
+
+                toChar(tileData)
+            }
+            .joinToString("")
+    }
+}
+
+fun Grid<Boolean>.toAscii() = toAscii {
+    if (it == true) {
+        BLOCK
+    } else {
+        '.'
+    }
 }

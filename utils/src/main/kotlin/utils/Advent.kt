@@ -31,4 +31,4 @@ fun <T> part1(block: () -> T) = solve("Part 1", block)
 
 fun <T> part2(block: () -> T) = solve("Part 2", block)
 
-const val BLOCK = "█"
+const val BLOCK = '█'

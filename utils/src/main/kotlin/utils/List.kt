@@ -1,7 +1,5 @@
 package utils
 
-import java.util.BitSet
-
 fun List<String>.filterNotBlank() = this.map { it.trim() }.filter { it.isNotBlank() }
 
 fun List<Char>.filterWhitespace() = this.filter { !it.isWhitespace() }
@@ -54,8 +52,6 @@ fun List<Int>.median() =
     }
 
 fun List<Int>.mean() = sum() / this.size.toDouble()
-
-fun BitSet.toIntSet() = stream().toArray().toSet()
 
 fun <T> Sequence<T>.cycle(): Sequence<T> = generateSequence(this) { this }.flatten()
 

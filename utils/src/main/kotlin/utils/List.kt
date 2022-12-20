@@ -88,3 +88,6 @@ fun List<Boolean>.interpretAsBinary() =
             }
         }
         .toInt(2)
+
+fun <T> List<T>.indexOfOrNull(predicate: (T) -> Boolean): Int? =
+    indexOfFirst(predicate).let { if (it == -1) null else it }

@@ -2,7 +2,7 @@ import CubeFace.*
 import FacingDirection.*
 import datastructures.Grid
 import datastructures.Point2D
-import utils.parseGridWithEmptyTiles
+import datastructures.parseGridWithEmptyTiles
 import utils.part1
 import utils.part2
 import utils.readResourceAsString

@@ -1,8 +1,8 @@
 package datastructures
 
 import utils.Scored
+import utils.filterNotBlank
 import utils.genericDijkstra
-import utils.parseGrid
 import utils.toRangeBy
 
 data class Tile<T>(val point: Point2D, val data: T) {
@@ -49,11 +49,6 @@ class Grid<T>(tiles: List<Tile<T>>) {
         _tiles.values.onEach { it.grid = this }
     }
 
-    constructor(
-        input: String,
-        createTile: (Char) -> T
-    ) : this(parseGrid<Tile<T>>(input) { x, y, char -> Tile<T>(Point2D(x, y), createTile(char)) })
-
     val tiles: Collection<Tile<T>>
         get() = _tiles.values
 
@@ -90,6 +85,30 @@ class Grid<T>(tiles: List<Tile<T>>) {
     override fun toString(): String {
         return "Grid(tiles=$tiles)"
     }
+}
+
+fun <T> parseGridWithEmptyTiles(input: String, tileData: (char: Char) -> T): Grid<T> {
+    val tiles =
+        input.lines().flatMapIndexed { y, row ->
+            row.toCharArray()
+                .mapIndexed { x, char ->
+                    if (char == ' ') return@mapIndexed null
+
+                    Tile(Point2D(x, y), tileData(char))
+                }
+                .filterNotNull()
+        }
+
+    return Grid(tiles)
+}
+
+fun <T> parseGrid(input: String, tileData: (char: Char) -> T): Grid<T> {
+    val tiles =
+        input.lines().filterNotBlank().flatMapIndexed { y, row ->
+            row.toCharArray().mapIndexed { x, char -> Tile(Point2D(x, y), tileData(char)) }
+        }
+
+    return Grid(tiles)
 }
 
 class SparseGrid(initialPoints: Set<Point2D>) {

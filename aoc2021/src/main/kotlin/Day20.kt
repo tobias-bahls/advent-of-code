@@ -1,6 +1,7 @@
 import datastructures.Grid
 import datastructures.Point2D
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.cartesian
 import utils.extend
 import utils.interpretAsBinary
@@ -39,7 +40,7 @@ fun main() {
         input
             .twoParts("\n\n")
             .mapFirst { it.replace("\n", "") }
-            .mapSecond { asciiPicture -> Grid(asciiPicture) { it == '#' } }
+            .mapSecond { asciiPicture -> parseGrid(asciiPicture) { it == '#' } }
 
     part1 { reduceTimes(2, PictureData(picture, algorithm)) { enhancePicture(it) }.litTiles() }
     part2 { reduceTimes(50, PictureData(picture, algorithm)) { enhancePicture(it) }.litTiles() }

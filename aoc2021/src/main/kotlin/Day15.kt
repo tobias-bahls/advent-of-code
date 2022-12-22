@@ -1,6 +1,7 @@
 import datastructures.Grid
 import datastructures.Point2D
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
@@ -51,13 +52,13 @@ fun main() {
     val input = readResourceAsString("/day15.txt")
 
     part1 {
-        val grid = Grid(input) { it.digitToInt() }
+        val grid = parseGrid(input) { it.digitToInt() }
 
         solve(grid)
     }
 
     part2 {
-        val grid = Grid(input) { it.digitToInt() }
+        val grid = parseGrid(input) { it.digitToInt() }
         enlargeGrid(grid)
 
         solve(grid)

@@ -1,5 +1,5 @@
-import datastructures.Grid
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.Scored
 import utils.part1
 import utils.part2
@@ -31,7 +31,7 @@ private fun determineNeighbours(tile: Tile<TileData>) =
 
 fun main() {
     val input = readResourceAsString("/day12.txt")
-    val grid = Grid(input) { TileData(it) }
+    val grid = parseGrid(input) { TileData(it) }
 
     val endNode = grid.tiles.find { it.data.end } ?: error("Could not find end node")
     part1 {

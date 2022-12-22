@@ -1,5 +1,5 @@
-import datastructures.Grid
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
@@ -27,7 +27,7 @@ fun viewingDistance(tile: Tile<Int>, block: (Tile<Int>) -> Tile<Int>?): Int {
 
 fun main() {
     val input = readResourceAsString("/day08.txt")
-    val grid = Grid(input) { it.digitToInt() }
+    val grid = parseGrid(input) { it.digitToInt() }
 
     part1 {
         grid.tiles

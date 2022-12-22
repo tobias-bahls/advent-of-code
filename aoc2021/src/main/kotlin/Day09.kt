@@ -1,5 +1,6 @@
 import datastructures.Grid
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
@@ -19,7 +20,7 @@ class Heightmap(private val grid: Grid<Height>) {
 
 fun main() {
     val input = readResourceAsString("/day09.txt")
-    val heightmap = Heightmap(Grid(input) { Height(it.digitToInt()) })
+    val heightmap = Heightmap(parseGrid(input) { Height(it.digitToInt()) })
 
     part1 { heightmap.lowPoints().sumOf { it.data.height + 1 } }
 

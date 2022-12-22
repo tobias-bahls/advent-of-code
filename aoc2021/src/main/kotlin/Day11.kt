@@ -1,5 +1,6 @@
 import datastructures.Grid
 import datastructures.Tile
+import datastructures.parseGrid
 import utils.applyEach
 import utils.part1
 import utils.part2
@@ -39,12 +40,12 @@ fun main() {
     val input = readResourceAsString("/day11.txt")
 
     part1 {
-        val grid = Grid(input) { Octopus(it.digitToInt()) }
+        val grid = parseGrid(input) { Octopus(it.digitToInt()) }
 
         100.times().sumOf { step(grid).size }
     }
     part2 {
-        val grid = Grid(input) { Octopus(it.digitToInt()) }
+        val grid = parseGrid(input) { Octopus(it.digitToInt()) }
 
         // +1 because they started flashing in the step before the one that we're interested in.
         untilTrue { step(grid).size == grid.tiles.size } + 1

@@ -3,6 +3,7 @@ package datastructures
 import utils.Scored
 import utils.genericDijkstra
 import utils.parseGrid
+import utils.toRangeBy
 
 data class Tile<T>(val point: Point2D, val data: T) {
     lateinit var grid: Grid<T>
@@ -60,6 +61,10 @@ class Grid<T>(tiles: List<Tile<T>>) {
         get() = _tiles.values.maxOf { it.point.x } + 1
     val height: Int
         get() = _tiles.values.maxOf { it.point.y } + 1
+
+    fun rowBounds(row: Int) = tiles.filter { it.point.y == row }.toRangeBy { it.point.x }
+
+    fun columnBounds(column: Int) = tiles.filter { it.point.x == column }.toRangeBy { it.point.y }
 
     fun tileAt(point: Point2D) = _tiles[point]
 

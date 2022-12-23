@@ -1,28 +1,70 @@
 package datastructures
 
+import datastructures.CardinalDirection.East
+import datastructures.CardinalDirection.North
+import datastructures.CardinalDirection.South
+import datastructures.CardinalDirection.West
+import kotlin.math.absoluteValue
 import utils.Scored
 import utils.filterNotBlank
 import utils.genericDijkstra
 import utils.toRangeBy
 
+sealed interface CardinalDirection {
+    sealed interface CardinalDirectionOrthogonal : CardinalDirection
+
+    object North : CardinalDirectionOrthogonal
+
+    object NorthEast : CardinalDirection
+
+    object East : CardinalDirectionOrthogonal
+
+    object SouthEast : CardinalDirection
+
+    object South : CardinalDirectionOrthogonal
+
+    object SouthWest : CardinalDirection
+    object West : CardinalDirectionOrthogonal
+
+    object NorthWest : CardinalDirection
+}
+
 data class Tile<T>(val point: Point2D, val data: T) {
     lateinit var grid: Grid<T>
 
-    val above: Tile<T>?
-        get() = grid.tileAt(point.top)
+    val north: Tile<T>?
+        get() = neighbourInDirection(North)
 
-    val right: Tile<T>?
-        get() = grid.tileAt(point.right)
+    val east: Tile<T>?
+        get() = neighbourInDirection(East)
 
-    val below: Tile<T>?
-        get() = grid.tileAt(point.bottom)
+    val south: Tile<T>?
+        get() = neighbourInDirection(South)
 
-    val left: Tile<T>?
-        get() = grid.tileAt(point.left)
+    val west: Tile<T>?
+        get() = neighbourInDirection(West)
 
     fun adjacentOrthogonally(): List<Tile<T>> =
         point.neighboursOrthogonally.mapNotNull { grid.tileAt(it) }
     fun adjacent(): List<Tile<T>> = point.neighbours.mapNotNull { grid.tileAt(it) }
+
+    fun neighboursInDirections(directions: List<CardinalDirection>): List<Tile<T>> =
+        directions.mapNotNull { neighbourInDirection(it) }
+
+    fun neighbourInDirection(cardinalDirection: CardinalDirection): Tile<T>? =
+        pointInCardinalDirection(cardinalDirection).let { grid.tileAt(it) }
+
+    fun pointInCardinalDirection(cardinalDirection: CardinalDirection) =
+        when (cardinalDirection) {
+            East -> point.right
+            North -> point.top
+            South -> point.bottom
+            West -> point.left
+            CardinalDirection.NorthEast -> point.topRight
+            CardinalDirection.NorthWest -> point.topLeft
+            CardinalDirection.SouthEast -> point.bottomRight
+            CardinalDirection.SouthWest -> point.bottomLeft
+        }
 
     fun isEdge(): Boolean {
         if (point.x == 0 || point.y == 0) {
@@ -53,9 +95,21 @@ class Grid<T>(tiles: List<Tile<T>>) {
         get() = _tiles.values
 
     val width: Int
-        get() = _tiles.values.maxOf { it.point.x } + 1
+        get() =
+            _tiles.values.maxOf { it.point.x } +
+                _tiles.values.minOf { it.point.x }.absoluteValue +
+                1
     val height: Int
-        get() = _tiles.values.maxOf { it.point.y } + 1
+        get() =
+            _tiles.values.maxOf { it.point.y } +
+                _tiles.values.minOf { it.point.y }.absoluteValue +
+                1
+
+    val xRange: ClosedRange<Int>
+        get() = _tiles.values.toRangeBy { it.point.x }
+
+    val yRange: ClosedRange<Int>
+        get() = _tiles.values.toRangeBy { it.point.y }
 
     fun rowBounds(row: Int) = tiles.filter { it.point.y == row }.toRangeBy { it.point.x }
 
@@ -102,10 +156,16 @@ fun <T> parseGridWithEmptyTiles(input: String, tileData: (char: Char) -> T): Gri
     return Grid(tiles)
 }
 
-fun <T> parseGrid(input: String, tileData: (char: Char) -> T): Grid<T> {
+fun <T> parseGrid(input: String, tileData: (char: Char) -> T?): Grid<T> {
     val tiles =
         input.lines().filterNotBlank().flatMapIndexed { y, row ->
-            row.toCharArray().mapIndexed { x, char -> Tile(Point2D(x, y), tileData(char)) }
+            row.toCharArray()
+                .mapIndexed { x, char ->
+                    val data = tileData(char) ?: return@mapIndexed null
+
+                    Tile(Point2D(x, y), data as T)
+                }
+                .filterNotNull()
         }
 
     return Grid(tiles)

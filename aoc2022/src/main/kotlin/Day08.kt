@@ -34,10 +34,10 @@ fun main() {
             .filter { tile ->
                 when {
                     tile.isEdge() -> true
-                    visibleAlong(tile) { it.above } -> true
-                    visibleAlong(tile) { it.right } -> true
-                    visibleAlong(tile) { it.below } -> true
-                    visibleAlong(tile) { it.left } -> true
+                    visibleAlong(tile) { it.north } -> true
+                    visibleAlong(tile) { it.east } -> true
+                    visibleAlong(tile) { it.south } -> true
+                    visibleAlong(tile) { it.west } -> true
                     else -> false
                 }
             }
@@ -46,10 +46,10 @@ fun main() {
 
     part2 {
         grid.tiles.maxOf { tile ->
-            viewingDistance(tile) { it.above } *
-                viewingDistance(tile) { it.right } *
-                viewingDistance(tile) { it.below } *
-                viewingDistance(tile) { it.left }
+            viewingDistance(tile) { it.north } *
+                viewingDistance(tile) { it.east } *
+                viewingDistance(tile) { it.south } *
+                viewingDistance(tile) { it.west }
         }
     }
 }

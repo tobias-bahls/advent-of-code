@@ -119,8 +119,8 @@ private fun createBasicFrame(width: Int, height: Int): JFrame {
 }
 
 fun <T> Grid<T>.toAscii(toChar: (T?) -> Char): String {
-    return (0 until height).joinToString("\n") { y ->
-        (0 until width)
+    return (yRange.start..yRange.endInclusive).joinToString("\n") { y ->
+        (xRange.start..xRange.endInclusive)
             .map { x ->
                 val tileData = tileAt(Point2D(x, y))?.data
 

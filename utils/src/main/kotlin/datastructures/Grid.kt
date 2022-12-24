@@ -11,7 +11,11 @@ import utils.genericDijkstra
 import utils.toRangeBy
 
 sealed interface CardinalDirection {
-    sealed interface CardinalDirectionOrthogonal : CardinalDirection
+    sealed interface CardinalDirectionOrthogonal : CardinalDirection {
+        companion object {
+            val ALL = listOf(North, East, South, West)
+        }
+    }
 
     object North : CardinalDirectionOrthogonal
 
@@ -156,16 +160,17 @@ fun <T> parseGridWithEmptyTiles(input: String, tileData: (char: Char) -> T): Gri
     return Grid(tiles)
 }
 
+fun <T> parseAsciiGrid(input: String, processTile: (x: Int, y: Int, char: Char) -> T?): List<T> =
+    input.lines().filterNotBlank().flatMapIndexed { y, row ->
+        row.toCharArray().mapIndexed { x, char -> processTile(x, y, char) }.filterNotNull()
+    }
+
 fun <T> parseGrid(input: String, tileData: (char: Char) -> T?): Grid<T> {
     val tiles =
-        input.lines().filterNotBlank().flatMapIndexed { y, row ->
-            row.toCharArray()
-                .mapIndexed { x, char ->
-                    val data = tileData(char) ?: return@mapIndexed null
+        parseAsciiGrid(input) { x, y, char ->
+            val data = tileData(char) ?: return@parseAsciiGrid null
 
-                    Tile(Point2D(x, y), data as T)
-                }
-                .filterNotNull()
+            Tile(Point2D(x, y), data as T)
         }
 
     return Grid(tiles)

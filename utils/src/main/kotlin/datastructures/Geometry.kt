@@ -1,5 +1,6 @@
 package datastructures
 
+import datastructures.CardinalDirection.*
 import kotlin.math.absoluteValue
 import kotlin.math.sqrt
 import utils.map
@@ -99,6 +100,19 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
 
     override fun toString() = "($x,$y,$z)"
 }
+
+val CardinalDirection.movementVector
+    get() =
+        when (this) {
+            East -> Point2D(1, 0)
+            North -> Point2D(0, -1)
+            South -> Point2D(0, 1)
+            West -> Point2D(-1, 0)
+            NorthEast -> Point2D(1, -1)
+            NorthWest -> Point2D(-1, -1)
+            SouthEast -> Point2D(1, 1)
+            SouthWest -> Point2D(-1, 1)
+        }
 
 fun parsePoint3D(input: String) =
     input

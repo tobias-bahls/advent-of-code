@@ -7,6 +7,8 @@ fun Int.times() = (1..this)
 
 fun Int.pow(n: Int) = this.toDouble().pow(n).toInt()
 
+fun Long.pow(n: Int) = this.toDouble().pow(n).toLong()
+
 fun Int.clamp(min: Int, max: Int) = this.coerceAtMost(max).coerceAtLeast(min)
 
 fun Int.gcd(other: Int): Int =

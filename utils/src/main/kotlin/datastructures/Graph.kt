@@ -1,7 +1,7 @@
 package datastructures
 
+import algorithms.dijkstraPath
 import utils.Scored
-import utils.genericDijkstra
 
 class Graph<I, N, E> {
     private val _nodes = mutableMapOf<I, Node>()
@@ -101,10 +101,12 @@ class Graph<I, N, E> {
     }
 
     fun dijkstra(start: Graph<I, N, Int>.Node, end: Graph<I, N, Int>.Node) =
-        genericDijkstra(
-            start = start,
-            end = end,
-            neighbours = { it.edges.map { edge -> Scored(edge.data, edge.to) } })
+        dijkstraPath<Graph<I, N, Int>.Node> {
+            this.start = start
+            this.end = end
+
+            neighbours { it.edges.map { edge -> Scored(edge.data, edge.to) } }
+        }
 }
 
 typealias DumbGraph = Graph<String, Unit, Unit>

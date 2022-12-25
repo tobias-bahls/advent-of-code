@@ -1,8 +1,8 @@
+import algorithms.dijkstra
 import datastructures.CardinalDirection.*
 import datastructures.Point2D
 import datastructures.movementVector
 import datastructures.parseAsciiGrid
-import java.util.PriorityQueue
 import utils.Scored
 import utils.lcm
 import utils.part1
@@ -102,8 +102,10 @@ fun main() {
         mapBounds: MapBounds
     ): Day24State {
         val startState = Day24State(startTime, startPosition, mapBounds)
+
         return dijkstra {
-            start(startState)
+            start = startState
+
             endCondition { it.elfPosition == targetPosition }
 
             neighbours { state ->
@@ -126,57 +128,4 @@ fun main() {
 
         thirdWay - 1
     }
-}
-
-class Dijkstra<T : Any> {
-    lateinit var start: T
-    lateinit var endCondition: (T) -> Boolean
-    lateinit var neighbours: (T) -> List<Scored<T>>
-    var inspection: ((T) -> Unit)? = null
-
-    fun start(start: T) {
-        this.start = start
-    }
-    fun endCondition(block: (T) -> Boolean) {
-        this.endCondition = block
-    }
-    fun neighbours(block: (T) -> List<Scored<T>>) {
-        this.neighbours = block
-    }
-
-    fun inspect(block: (T) -> Unit) {
-        this.inspection = block
-    }
-}
-
-fun <T : Any> dijkstra(config: Dijkstra<T>.() -> Unit): T? {
-    val dijkstra = Dijkstra<T>()
-    dijkstra.config()
-
-    val dist = mutableMapOf<T, Int>()
-    val prev = mutableMapOf<T, T>()
-    dist[dijkstra.start] = 0
-    val queue = PriorityQueue<T>(compareBy { dist[it] })
-    queue.add(dijkstra.start)
-    while (queue.isNotEmpty()) {
-        val u = queue.remove()
-        if (dijkstra.inspection != null) {
-            dijkstra.inspection?.let { it(u) }
-        }
-        if (dijkstra.endCondition(u)) {
-            return u
-        }
-
-        dijkstra.neighbours(u).forEach {
-            val alt = dist.getOrDefault(u, Integer.MAX_VALUE) + it.score
-            if (alt < dist.getOrDefault(it.neighbour, Integer.MAX_VALUE)) {
-                dist[it.neighbour] = alt
-                prev[it.neighbour] = u
-                if (it.neighbour !in queue) {
-                    queue.add(it.neighbour)
-                }
-            }
-        }
-    }
-    return null
 }

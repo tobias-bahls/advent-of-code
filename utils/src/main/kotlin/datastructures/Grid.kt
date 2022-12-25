@@ -1,5 +1,6 @@
 package datastructures
 
+import algorithms.dijkstraPath
 import datastructures.CardinalDirection.East
 import datastructures.CardinalDirection.North
 import datastructures.CardinalDirection.South
@@ -7,7 +8,6 @@ import datastructures.CardinalDirection.West
 import kotlin.math.absoluteValue
 import utils.Scored
 import utils.filterNotBlank
-import utils.genericDijkstra
 import utils.toRangeBy
 
 sealed interface CardinalDirection {
@@ -128,17 +128,24 @@ class Grid<T>(tiles: List<Tile<T>>) {
     }
 
     fun dijkstra(start: Tile<T>, end: Tile<T>, score: (Tile<T>, Tile<T>) -> Int) =
-        genericDijkstra(
-            start = start,
-            end = end,
-            neighbours = { tile ->
+        dijkstraPath<Tile<T>> {
+            this.start = start
+            this.end = end
+
+            neighbours { tile ->
                 tile.adjacentOrthogonally().map { neighbour ->
                     Scored(score(tile, neighbour), neighbour)
                 }
-            })
+            }
+        }
 
     fun dijkstra(start: Tile<T>, end: Tile<T>, neighbours: (Tile<T>) -> List<Scored<Tile<T>>>) =
-        genericDijkstra(start = start, end = end, neighbours = neighbours)
+        dijkstraPath<Tile<T>> {
+            this.start = start
+            this.end = end
+
+            neighbours { neighbours(it) }
+        }
 
     override fun toString(): String {
         return "Grid(tiles=$tiles)"

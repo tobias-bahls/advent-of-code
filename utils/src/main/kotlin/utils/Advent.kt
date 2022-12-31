@@ -14,6 +14,16 @@ fun <T> T.dump(prefix: String): T = this.also { println("$prefix: $this") }
 
 fun <T> List<T>.sample(): List<T> = this.subList(0, 3).dump()
 
+fun <T> Iterable<T>.dumpList(prefix: String = ""): Iterable<T> {
+    if (prefix != "") {
+        println("$prefix:")
+    } else {
+        println("Iterable:")
+    }
+
+    return this.onEach { println("  - $it") }
+}
+
 fun readResourceAsString(name: String): String =
     object {}::class.java.getResource(name)?.readText() ?: error("Did not find file $name")
 

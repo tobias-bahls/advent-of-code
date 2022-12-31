@@ -1,7 +1,8 @@
 package algorithms
 
-import java.util.PriorityQueue
 import utils.Scored
+import utils.addWithPriority
+import utils.priorityQueue
 
 fun <T : Any> dijkstraPath(block: DijkstraBuilder<T>.() -> Unit): List<T>? {
     val builder = DijkstraBuilder<T>().apply(block)
@@ -48,7 +49,7 @@ class DijkstraBuilder<T : Any> {
 
     private var inspection: ((T) -> Unit)? = null
 
-    val effectiveEndCondition: (T) -> Boolean
+    private val effectiveEndCondition: (T) -> Boolean
         get() = run {
             if (endCondition == null && end == null) {
                 error("Neither endCondition nor end was set for Dijkstra")
@@ -92,13 +93,17 @@ class Dijkstra<T : Any>(
     private val inspection: ((T) -> Unit)?
 ) {
     fun run(): DijkstraResult<T> {
-        val dist = mutableMapOf<T, Int>()
+        val dist = mutableMapOf<T, Int>().withDefault { Integer.MAX_VALUE }
         val prev = mutableMapOf<T, T>()
         dist[start] = 0
-        val queue = PriorityQueue<T>(compareBy { dist[it] })
-        queue.add(start)
+        val queue = priorityQueue<T>()
+        queue.addWithPriority(0, start)
         while (queue.isNotEmpty()) {
-            val u = queue.remove()
+            val (priority, u) = queue.remove()
+
+            if (priority != dist[u]) {
+                continue
+            }
 
             inspection?.let { it(u) }
 
@@ -107,13 +112,11 @@ class Dijkstra<T : Any>(
             }
 
             neighbours(u).forEach {
-                val alt = dist.getOrDefault(u, Integer.MAX_VALUE) + it.score
-                if (alt < dist.getOrDefault(it.neighbour, Integer.MAX_VALUE)) {
+                val alt = dist.getValue(u) + it.score
+                if (alt < dist.getValue(it.neighbour)) {
                     dist[it.neighbour] = alt
                     prev[it.neighbour] = u
-                    if (it.neighbour !in queue) {
-                        queue.add(it.neighbour)
-                    }
+                    queue.addWithPriority(alt, it.neighbour)
                 }
             }
         }

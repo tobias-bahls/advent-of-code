@@ -3,15 +3,15 @@ import utils.part1
 import utils.part2
 import utils.readResourceAsString
 
-enum class Direction {
+private enum class Direction {
     Forward,
     Up,
     Down
 }
 
-data class Command(val direction: Direction, val units: Int)
+private data class Command(val direction: Direction, val units: Int)
 
-fun parseLine(it: String): Command {
+private fun parseLine(it: String): Command {
     val split = it.split(" ")
 
     return Command(
@@ -31,14 +31,13 @@ fun main() {
     val input = readResourceAsString("/day01.txt").parseLines { parseLine(it) }
 
     part1 {
-        val part1 =
-            input.fold(Location()) { loc, cmd ->
-                when (cmd.direction) {
-                    Direction.Forward -> loc.copy(horizontal = loc.horizontal + cmd.units)
-                    Direction.Up -> loc.copy(vertical = loc.vertical - cmd.units)
-                    Direction.Down -> loc.copy(vertical = loc.vertical + cmd.units)
-                }
+        input.fold(Location()) { loc, cmd ->
+            when (cmd.direction) {
+                Direction.Forward -> loc.copy(horizontal = loc.horizontal + cmd.units)
+                Direction.Up -> loc.copy(vertical = loc.vertical - cmd.units)
+                Direction.Down -> loc.copy(vertical = loc.vertical + cmd.units)
             }
+        }
     }
 
     part2 {

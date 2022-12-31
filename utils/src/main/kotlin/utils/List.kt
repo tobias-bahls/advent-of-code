@@ -28,19 +28,20 @@ fun <T> List<T>.expectOddSize(): List<T> {
 
 fun <T> List<T>.middleElement(): T = this.expectOddSize()[this.size / 2]
 
-fun <E> transpose(xs: List<List<E>>): List<List<E>> {
-    fun <E> List<E>.head(): E = this.first()
-    fun <E> List<E>.tail(): List<E> = this.takeLast(this.size - 1)
-    fun <E> E.append(xs: List<E>): List<E> = listOf(this).plus(xs)
+fun <T> List<T>.head(): T = this.first()
 
-    xs.filter { it.isNotEmpty() }
+fun <T> List<T>.tail(): List<T> = this.takeLast(this.size - 1)
+
+fun <T> T.append(xs: List<T>): List<T> = listOf(this).plus(xs)
+
+fun <T> List<List<T>>.transpose(): List<List<T>> =
+    this.filter { it.isNotEmpty() }
         .let { ys ->
             return when (ys.isNotEmpty()) {
-                true -> ys.map { it.head() }.append(transpose(ys.map { it.tail() }))
+                true -> ys.map { it.head() }.append(ys.map { it.tail() }.transpose())
                 else -> emptyList()
             }
         }
-}
 
 fun List<Int>.median() =
     sorted().let {
@@ -87,3 +88,9 @@ fun List<Boolean>.interpretAsBinary() =
 
 fun <T> List<T>.indexOfOrNull(predicate: (T) -> Boolean): Int? =
     indexOfFirst(predicate).let { if (it == -1) null else it }
+
+fun <T> List<T>.updated(index: Int, element: T) = mapIndexed { idx, elem ->
+    if (index == idx) element else elem
+}
+
+fun <T> T?.nullableToList(): List<T> = if (this == null) emptyList() else listOf(this)

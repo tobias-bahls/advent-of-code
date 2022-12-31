@@ -9,7 +9,8 @@ fun main() {
         readResourceAsString("/day03.txt").parseLines { it.split("").filter { it.isNotBlank() } }
 
     part1 {
-        transpose(input)
+        input
+            .transpose()
             .joinToString("") { x ->
                 val ones = x.count { it == "1" }
                 val zeroes = x.count { it == "0" }

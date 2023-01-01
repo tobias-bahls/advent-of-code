@@ -87,7 +87,14 @@ data class Tile<T>(val point: Point2D, val data: T) {
     }
 }
 
-class Grid<T>(tiles: List<Tile<T>>) {
+class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
+    constructor(
+        tiles: List<Tile<T>>
+    ) : this(
+        tiles,
+        tiles.maxOf { it.point.x } + tiles.minOf { it.point.x }.absoluteValue + 1,
+        tiles.maxOf { it.point.y } + tiles.minOf { it.point.y }.absoluteValue + 1)
+
     private val _tiles: MutableMap<Point2D, Tile<T>>
 
     init {
@@ -97,17 +104,6 @@ class Grid<T>(tiles: List<Tile<T>>) {
 
     val tiles: Collection<Tile<T>>
         get() = _tiles.values
-
-    val width: Int
-        get() =
-            _tiles.values.maxOf { it.point.x } +
-                _tiles.values.minOf { it.point.x }.absoluteValue +
-                1
-    val height: Int
-        get() =
-            _tiles.values.maxOf { it.point.y } +
-                _tiles.values.minOf { it.point.y }.absoluteValue +
-                1
 
     val xRange: ClosedRange<Int>
         get() = _tiles.values.toRangeBy { it.point.x }
@@ -146,6 +142,9 @@ class Grid<T>(tiles: List<Tile<T>>) {
 
             neighbours { neighbours(it) }
         }
+
+    fun hasSameTiles(other: Grid<T>) =
+        this.tiles.map { Pair(it.point, it.data) } == other.tiles.map { Pair(it.point, it.data) }
 
     override fun toString(): String {
         return "Grid(tiles=$tiles)"

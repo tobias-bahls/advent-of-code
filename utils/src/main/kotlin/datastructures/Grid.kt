@@ -97,6 +97,9 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
 
     private val _tiles: MutableMap<Point2D, Tile<T>>
 
+    var wrapAroundX: Boolean = false
+    var wrapAroundY: Boolean = false
+
     init {
         _tiles = tiles.associateBy { it.point }.toMutableMap()
         _tiles.values.onEach { it.grid = this }
@@ -115,7 +118,7 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
 
     fun columnBounds(column: Int) = tiles.filter { it.point.x == column }.toRangeBy { it.point.y }
 
-    fun tileAt(point: Point2D) = _tiles[point]
+    fun tileAt(point: Point2D) = _tiles[wrapAround(point)]
 
     fun addTile(point: Point2D, data: T) {
         val tile = Tile(point, data)
@@ -145,6 +148,13 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
 
     fun hasSameTiles(other: Grid<T>) =
         this.tiles.map { Pair(it.point, it.data) } == other.tiles.map { Pair(it.point, it.data) }
+
+    private fun wrapAround(point: Point2D): Point2D {
+        val newX = if (wrapAroundX) point.x.mod(width) else point.x
+        val newY = if (wrapAroundY) point.y.mod(height) else point.y
+
+        return Point2D(newX, newY)
+    }
 
     override fun toString(): String {
         return "Grid(tiles=$tiles)"

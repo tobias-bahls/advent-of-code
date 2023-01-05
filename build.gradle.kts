@@ -1,6 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.8.0"
@@ -9,32 +8,27 @@ plugins {
     id("com.github.ben-manes.versions") version "0.44.0" apply false
 }
 
-configure<SpotlessExtension> { kotlinGradle { ktfmt().dropboxStyle() } }
-
 allprojects {
     group = "de.tobias"
     version = "NONE"
 
+    apply(plugin = "org.jetbrains.kotlin.jvm")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "se.patrikerdes.use-latest-versions")
     apply(plugin = "com.github.ben-manes.versions")
+
     repositories { mavenCentral() }
 
     fun isNonStable(version: String): Boolean {
         val stableKeyword =
-            listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+            listOf("RELEASE", "FINAL", "GA", "RC").any { version.toUpperCase().contains(it) }
         val regex = "^[0-9,.v-]+(-r)?$".toRegex()
         val isStable = stableKeyword || regex.matches(version)
         return isStable.not()
     }
     tasks.withType<DependencyUpdatesTask> { rejectVersionIf { isNonStable(candidate.version) } }
-}
 
-subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "com.diffplug.spotless")
-
-    tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+    kotlin { jvmToolchain(17) }
 
     configure<SpotlessExtension> {
         kotlin { ktfmt().dropboxStyle() }

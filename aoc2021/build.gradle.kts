@@ -1,8 +1,3 @@
-plugins {
-    kotlin("jvm")
-    id("com.diffplug.spotless")
-
-    application
-}
+plugins { application }
 
 dependencies { implementation(project(":utils")) }

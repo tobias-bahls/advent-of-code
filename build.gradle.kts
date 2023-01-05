@@ -3,8 +3,8 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.22"
-    id("com.diffplug.spotless") version "6.12.0"
+    kotlin("jvm") version "1.8.0"
+    id("com.diffplug.spotless") version "6.12.1"
     id("se.patrikerdes.use-latest-versions") version "0.2.18" apply false
     id("com.github.ben-manes.versions") version "0.44.0" apply false
 }

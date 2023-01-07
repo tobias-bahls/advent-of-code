@@ -94,3 +94,5 @@ fun <T> List<T>.updated(index: Int, element: T) = mapIndexed { idx, elem ->
 }
 
 fun <T> T?.nullableToList(): List<T> = if (this == null) emptyList() else listOf(this)
+
+fun <T> List<T>.toFrequencyMap() = this.groupingBy { it }.eachCount()

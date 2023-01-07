@@ -28,11 +28,13 @@ fun readResourceAsString(name: String): String =
     object {}::class.java.getResource(name)?.readText() ?: error("Did not find file $name")
 
 @OptIn(ExperimentalTime::class)
-fun <T> solve(msg: String, block: () -> T) {
+fun <T> solve(msg: String, block: () -> T): T {
     var result: T
     val duration = measureTime { result = block() }
 
     if (result != Unit) println("$msg: $result [⏰ $duration]")
+
+    return result
 }
 
 fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)

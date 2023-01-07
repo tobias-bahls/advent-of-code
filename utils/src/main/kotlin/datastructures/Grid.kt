@@ -9,8 +9,12 @@ import kotlin.math.absoluteValue
 import utils.Scored
 import utils.filterNotBlank
 import utils.toRangeBy
+import utils.untilTrue
 
 sealed interface CardinalDirection {
+    companion object {
+        val ALL = listOf(North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest)
+    }
     sealed interface CardinalDirectionOrthogonal : CardinalDirection {
         companion object {
             val ALL = listOf(North, East, South, West)
@@ -37,26 +41,46 @@ data class Tile<T>(val point: Point2D, val data: T) {
     lateinit var grid: Grid<T>
 
     val north: Tile<T>?
-        get() = neighbourInDirection(North)
+        get() = directNeighbourInDirection(North)
 
     val east: Tile<T>?
-        get() = neighbourInDirection(East)
+        get() = directNeighbourInDirection(East)
 
     val south: Tile<T>?
-        get() = neighbourInDirection(South)
+        get() = directNeighbourInDirection(South)
 
     val west: Tile<T>?
-        get() = neighbourInDirection(West)
+        get() = directNeighbourInDirection(West)
 
     fun adjacentOrthogonally(): List<Tile<T>> =
         point.neighboursOrthogonally.mapNotNull { grid.tileAt(it) }
     fun adjacent(): List<Tile<T>> = point.neighbours.mapNotNull { grid.tileAt(it) }
 
-    fun neighboursInDirections(directions: List<CardinalDirection>): List<Tile<T>> =
-        directions.mapNotNull { neighbourInDirection(it) }
+    fun directNeighboursInDirections(directions: List<CardinalDirection>): List<Tile<T>> =
+        directions.mapNotNull { directNeighbourInDirection(it) }
 
-    fun neighbourInDirection(cardinalDirection: CardinalDirection): Tile<T>? =
+    fun directNeighbourInDirection(cardinalDirection: CardinalDirection): Tile<T>? =
         pointInCardinalDirection(cardinalDirection).let { grid.tileAt(it) }
+
+    fun allTilesInDirection(cardinalDirection: CardinalDirection): Sequence<Tile<T>> {
+        var current = point + cardinalDirection.movementVector
+
+        return generateSequence {
+            if (!grid.inBounds(current)) {
+                return@generateSequence null
+            }
+
+            while (grid.inBounds(current)) {
+                val tile = grid.tileAt(current)
+                current += cardinalDirection.movementVector
+                if (tile != null) {
+                    return@generateSequence tile
+                }
+            }
+
+            return@generateSequence null
+        }
+    }
 
     fun pointInCardinalDirection(cardinalDirection: CardinalDirection) =
         when (cardinalDirection) {
@@ -108,15 +132,15 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     val tiles: Collection<Tile<T>>
         get() = _tiles.values
 
-    val xRange: ClosedRange<Int>
-        get() = _tiles.values.toRangeBy { it.point.x }
+    val xRange: ClosedRange<Int> by lazy { _tiles.values.toRangeBy { it.point.x } }
 
-    val yRange: ClosedRange<Int>
-        get() = _tiles.values.toRangeBy { it.point.y }
+    val yRange: ClosedRange<Int> by lazy { _tiles.values.toRangeBy { it.point.y } }
 
     fun rowBounds(row: Int) = tiles.filter { it.point.y == row }.toRangeBy { it.point.x }
 
     fun columnBounds(column: Int) = tiles.filter { it.point.x == column }.toRangeBy { it.point.y }
+
+    fun inBounds(point: Point2D) = point.x in xRange && point.y in yRange
 
     fun tileAt(point: Point2D) = _tiles[wrapAround(point)]
 
@@ -137,6 +161,24 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
                 }
             }
         }
+
+    data class TransformUntilStableResult<T>(val iterations: Int, val resultGrid: Grid<T>)
+    fun transformUntilStable(transform: (Grid<T>) -> Grid<T>): TransformUntilStableResult<T> {
+        var currentGrid = this
+        val iterations =
+            untilTrue {
+                val nextGrid = transform(currentGrid)
+
+                if (currentGrid.hasSameTiles(nextGrid)) {
+                    true
+                } else {
+                    currentGrid = nextGrid
+                    false
+                }
+            } + 1
+
+        return TransformUntilStableResult(iterations, currentGrid)
+    }
 
     fun dijkstra(start: Tile<T>, end: Tile<T>, neighbours: (Tile<T>) -> List<Scored<Tile<T>>>) =
         dijkstraPath<Tile<T>> {

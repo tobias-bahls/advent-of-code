@@ -7,7 +7,6 @@ import datastructures.Tile
 import datastructures.parseGrid
 import utils.part1
 import utils.readResourceAsString
-import utils.untilTrue
 
 private data class SeaCucumber(val direction: CardinalDirectionOrthogonal)
 
@@ -49,17 +48,5 @@ fun main() {
             }?.let { SeaCucumber(it) }
         }
 
-    part1 {
-        var currentGrid = grid
-        untilTrue {
-            val nextGrid = step(currentGrid)
-
-            if (currentGrid.hasSameTiles(nextGrid)) {
-                true
-            } else {
-                currentGrid = nextGrid
-                false
-            }
-        } + 1
-    }
+    part1 { grid.transformUntilStable { step(it) }.iterations }
 }

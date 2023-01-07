@@ -33,7 +33,7 @@ private fun step(grid: Grid<Elf>): Grid<Elf> {
                             East -> listOf(East, NorthEast, SouthEast)
                         }
 
-                    elf.neighboursInDirections(lookAt).isEmpty()
+                    elf.directNeighboursInDirections(lookAt).isEmpty()
                 }
                     ?: return@groupBy null
 

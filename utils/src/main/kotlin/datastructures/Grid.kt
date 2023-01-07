@@ -5,11 +5,17 @@ import datastructures.CardinalDirection.East
 import datastructures.CardinalDirection.North
 import datastructures.CardinalDirection.South
 import datastructures.CardinalDirection.West
+import datastructures.LeftRightDirection.*
 import kotlin.math.absoluteValue
 import utils.Scored
 import utils.filterNotBlank
 import utils.toRangeBy
 import utils.untilTrue
+
+sealed interface LeftRightDirection {
+    object Left : LeftRightDirection
+    object Right : LeftRightDirection
+}
 
 sealed interface CardinalDirection {
     companion object {
@@ -19,6 +25,24 @@ sealed interface CardinalDirection {
         companion object {
             val ALL = listOf(North, East, South, West)
         }
+
+        fun turn(leftRightDirection: LeftRightDirection) =
+            when (leftRightDirection) {
+                Left ->
+                    when (this) {
+                        North -> West
+                        East -> North
+                        South -> East
+                        West -> South
+                    }
+                Right ->
+                    when (this) {
+                        North -> East
+                        East -> South
+                        South -> West
+                        West -> North
+                    }
+            }
     }
 
     object North : CardinalDirectionOrthogonal

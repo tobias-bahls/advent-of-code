@@ -2,6 +2,9 @@ package datastructures
 
 import datastructures.CardinalDirection.*
 import kotlin.math.absoluteValue
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.math.sqrt
 import utils.map
 import utils.match
@@ -42,12 +45,23 @@ data class Point2D(val x: Int, val y: Int) {
 
     operator fun minus(other: Point2D): Point2D = Point2D(this.x - other.x, this.y - other.y)
     operator fun plus(other: Point2D): Point2D = Point2D(this.x + other.x, this.y + other.y)
+    operator fun times(other: Int): Point2D = Point2D(this.x * other, this.y * other)
 
     fun distanceTo(other: Point2D): Double =
         sqrt((other.x - this.x).pow(2).toDouble() + (other.y - this.y).pow(2))
 
     fun manhattanDistanceTo(other: Point2D): Int =
         (this.x - other.x).absoluteValue + (this.y - other.y).absoluteValue
+
+    fun rotate(pivot: Point2D, angle: Int): Point2D = (this - pivot).rotate(angle) + pivot
+
+    fun rotate(angle: Int): Point2D {
+        val angleRad = Math.toRadians(angle.toDouble())
+        val s = sin(angleRad)
+        val c = cos(angleRad)
+
+        return Point2D((x * c - y * s).roundToInt(), (x * s + y * c).roundToInt())
+    }
 
     override fun toString() = "($x,$y)"
 }

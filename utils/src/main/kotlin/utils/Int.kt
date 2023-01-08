@@ -42,3 +42,10 @@ fun Int.lcm(other: Int): Int {
 }
 
 fun Int.oneBasedModulo(n: Int) = ((this - 1) % n) + 1
+
+fun Long.setBit(n: Int, to: Boolean): Long =
+    if (to) {
+        this or (1L shl n)
+    } else {
+        this and (1L shl n).inv()
+    }

@@ -16,7 +16,7 @@ private data class Bitmask(val raw: String) {
     fun apply(to: Long) = (to and andMask) or orMask
 
     fun applyToMemory(to: Long): List<Long> {
-        val andMaskApplied = to or orMask
+        val orMaskApplied = to or orMask
 
         fun applyAllFloatingBits(remainingBits: List<Int>, current: Long): List<Long> {
             if (remainingBits.isEmpty()) {
@@ -32,7 +32,7 @@ private data class Bitmask(val raw: String) {
                 applyAllFloatingBits(newRemaining, oneSet)
         }
 
-        return applyAllFloatingBits(floatingBits, andMaskApplied)
+        return applyAllFloatingBits(floatingBits, orMaskApplied)
     }
 }
 

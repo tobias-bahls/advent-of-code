@@ -6,10 +6,12 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 import kotlin.math.sqrt
+import utils.cartesian
 import utils.map
 import utils.match
 import utils.pow
 import utils.toPair
+import utils.toTriple
 
 data class Point2D(val x: Int, val y: Int) {
     companion object {
@@ -72,6 +74,28 @@ fun parsePoint2D(input: String) =
     input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }
 
 data class Point3D(val x: Int, val y: Int, val z: Int) {
+    companion object {
+        val ZERO = Point3D(0, 0, 0)
+
+        val allNeighbourVectors =
+            listOf(-1, 0, 1)
+                .let { it.cartesian(it).cartesian(it) }
+                .map { it.toTriple() }
+                .map { (x, y, z) -> Point3D(x, y, z) }
+                .filter { it != ZERO }
+                .toList()
+
+        val orthogonalNeighbourVectors =
+            listOf(
+                Point3D(-1, 0, 0),
+                Point3D(1, 0, 0),
+                Point3D(0, 1, 0),
+                Point3D(0, -1, 0),
+                Point3D(0, 0, 1),
+                Point3D(0, 0, -1),
+            )
+    }
+
     fun transform(matrix: Array<IntArray>): Point3D {
         return Point3D(
             matrix[0][0] * x + matrix[0][1] * y + matrix[0][2] * z,
@@ -80,17 +104,11 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
         )
     }
 
+    val neighbours
+        get() = allNeighbourVectors.map { this + it }
+
     val neighboursOrthogonally
-        get() =
-            listOf(
-                    Point3D(-1, 0, 0),
-                    Point3D(1, 0, 0),
-                    Point3D(0, 1, 0),
-                    Point3D(0, -1, 0),
-                    Point3D(0, 0, 1),
-                    Point3D(0, 0, -1),
-                )
-                .map { this + it }
+        get() = orthogonalNeighbourVectors.map { this + it }
 
     fun translate(translation: Point3D): Point3D {
         return Point3D(

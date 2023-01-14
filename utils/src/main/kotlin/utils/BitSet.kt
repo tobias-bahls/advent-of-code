@@ -12,3 +12,5 @@ fun BitSet.clearAll(elems: Iterable<Int>) = elems.forEach { clear(it) }
 fun BitSet.copy(): BitSet = clone() as BitSet
 
 fun Set<Int>.toBitSet() = BitSet().also { bs -> bs.setAll(this) }
+
+fun List<Int>.toBitSet() = toSet().toBitSet()

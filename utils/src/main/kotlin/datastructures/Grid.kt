@@ -243,7 +243,13 @@ fun <T> parseGridWithEmptyTiles(input: String, tileData: (char: Char) -> T): Gri
 }
 
 fun <T> parseAsciiGrid(input: String, processTile: (x: Int, y: Int, char: Char) -> T?): List<T> =
-    input.lines().filterNotBlank().flatMapIndexed { y, row ->
+    parseAsciiGrid(input.lines(), processTile)
+
+fun <T> parseAsciiGrid(
+    lines: List<String>,
+    processTile: (x: Int, y: Int, char: Char) -> T?
+): List<T> =
+    lines.filterNotBlank().flatMapIndexed { y, row ->
         row.toCharArray().mapIndexed { x, char -> processTile(x, y, char) }.filterNotNull()
     }
 

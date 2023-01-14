@@ -22,9 +22,15 @@ fun <T> queue(
     initial: T,
     mode: QueueMode = QueueMode.FIFO,
     process: QueueOperations<T>.(T) -> QueueOperation<T>
+) = queue(listOf(initial), mode, process)
+
+fun <T> queue(
+    initial: List<T>,
+    mode: QueueMode = QueueMode.FIFO,
+    process: QueueOperations<T>.(T) -> QueueOperation<T>
 ) {
     val queue = ArrayDeque<T>()
-    queue.add(initial)
+    queue.addAll(initial)
 
     val add: (T) -> Unit =
         when (mode) {

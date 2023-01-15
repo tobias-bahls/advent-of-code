@@ -14,6 +14,9 @@ fun <T> T.dump(prefix: String): T = this.also { println("$prefix: $this") }
 
 fun <T> List<T>.sample(): List<T> = this.subList(0, 3).dump()
 
+fun <K, V> Map<K, V>.dumpMap(prefix: String = ""): Map<K, V> =
+    this.also { it.entries.dumpList(prefix) }
+
 fun <T> Iterable<T>.dumpList(prefix: String = ""): Iterable<T> {
     if (prefix != "") {
         println("$prefix:")

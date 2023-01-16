@@ -3,7 +3,11 @@ package datastructures
 import algorithms.dijkstraPath
 import datastructures.CardinalDirection.East
 import datastructures.CardinalDirection.North
+import datastructures.CardinalDirection.NorthEast
+import datastructures.CardinalDirection.NorthWest
 import datastructures.CardinalDirection.South
+import datastructures.CardinalDirection.SouthEast
+import datastructures.CardinalDirection.SouthWest
 import datastructures.CardinalDirection.West
 import datastructures.LeftRightDirection.*
 import kotlin.math.absoluteValue
@@ -61,6 +65,19 @@ sealed interface CardinalDirection {
     object NorthWest : CardinalDirection
 }
 
+fun parseCardinalDirection(input: String) =
+    when (input.lowercase()) {
+        "n" -> North
+        "ne" -> NorthEast
+        "e" -> East
+        "se" -> SouthEast
+        "s" -> South
+        "sw" -> SouthWest
+        "w" -> West
+        "nw" -> NorthWest
+        else -> error("Unknown cardinal direction string: $input")
+    }
+
 data class Tile<T>(val point: Point2D, val data: T) {
     lateinit var grid: Grid<T>
 
@@ -112,10 +129,10 @@ data class Tile<T>(val point: Point2D, val data: T) {
             North -> point.top
             South -> point.bottom
             West -> point.left
-            CardinalDirection.NorthEast -> point.topRight
-            CardinalDirection.NorthWest -> point.topLeft
-            CardinalDirection.SouthEast -> point.bottomRight
-            CardinalDirection.SouthWest -> point.bottomLeft
+            NorthEast -> point.topRight
+            NorthWest -> point.topLeft
+            SouthEast -> point.bottomRight
+            SouthWest -> point.bottomLeft
         }
 
     fun isEdge(): Boolean {

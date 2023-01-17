@@ -3,7 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     kotlin("jvm") version "1.8.0"
-    id("com.diffplug.spotless") version "6.12.1"
+    id("com.diffplug.spotless") version "6.13.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.18" apply false
     id("com.github.ben-manes.versions") version "0.44.0" apply false
 }
@@ -36,7 +36,7 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:23.1.0")
+        compileOnly("org.jetbrains:annotations:24.0.0")
 
         implementation("io.kotest:kotest-assertions-core-jvm:5.5.4")
         implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")

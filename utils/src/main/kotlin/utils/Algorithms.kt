@@ -30,6 +30,9 @@ fun untilTrue(condition: () -> Boolean): Int {
 fun <T> reduceTimes(n: Int, initial: T, operation: (T) -> T) =
     1.rangeTo(n).fold(initial) { it, _ -> operation(it) }
 
+fun <T> reduceTimes(n: Long, initial: T, operation: (T) -> T) =
+    1.rangeTo(n).fold(initial) { it, _ -> operation(it) }
+
 fun <T> repeatedList(n: Int, block: () -> T) = 1.rangeTo(n).map { block() }
 
 data class Scored<T>(val score: Int, val neighbour: T)

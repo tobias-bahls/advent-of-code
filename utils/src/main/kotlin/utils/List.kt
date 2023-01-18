@@ -76,6 +76,19 @@ fun <T, R> Iterable<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
 fun <T, R> Sequence<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
     this.flatMap { a -> other.asSequence().map { b -> a to b } }
 
+fun <T> Iterable<T>.consecutiveElements(): Sequence<List<T>> {
+    var sequence = this.asSequence()
+
+    return generateSequence {
+        val current = sequence.firstOrNull() ?: return@generateSequence null
+
+        val consecutive = sequence.takeWhile { it == current }
+        sequence = sequence.dropWhile { it == current }
+
+        consecutive.toList()
+    }
+}
+
 fun List<Boolean>.interpretAsBinary() =
     joinToString("") {
             if (it) {

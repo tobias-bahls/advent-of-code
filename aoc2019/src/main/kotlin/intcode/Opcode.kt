@@ -1,27 +1,17 @@
 package intcode
 
-sealed class Opcode(val numArgs: Int) {
-    val size = numArgs + 1
+import intcode.OpcodeParameter.AddressParameter
 
-    data class Add(val a: Address, val b: Address, val dst: Address) : Opcode(3) {
-        constructor(
-            args: IntArray
-        ) : this(args[0].toAddress(), args[1].toAddress(), args[2].toAddress()) {
-            check(args.size == numArgs) {
-                error("Too many args passed to ${this::class.simpleName}")
-            }
-        }
-    }
+sealed class OpcodeParameter {
+    data class AddressParameter(val address: Int) : OpcodeParameter()
+    data class ValueParameter(val value: Int) : OpcodeParameter()
+}
 
-    data class Mul(val a: Address, val b: Address, val dst: Address) : Opcode(3) {
-        constructor(
-            args: IntArray
-        ) : this(args[0].toAddress(), args[1].toAddress(), args[2].toAddress()) {
-            check(args.size == numArgs) {
-                error("Too many args passed to ${this::class.simpleName}")
-            }
-        }
-    }
+sealed class Opcode {
+    data class Add(val a: OpcodeParameter, val b: OpcodeParameter, val dst: AddressParameter) :
+        Opcode()
+    data class Mul(val a: OpcodeParameter, val b: OpcodeParameter, val dst: AddressParameter) :
+        Opcode()
 
-    object Halt : Opcode(0)
+    object Halt : Opcode()
 }

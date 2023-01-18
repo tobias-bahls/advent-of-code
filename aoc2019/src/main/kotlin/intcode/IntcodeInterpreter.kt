@@ -1,5 +1,12 @@
 package intcode
 
+import intcode.IntcodeInterpreter.ParameterMode.*
+import intcode.Opcode.Add
+import intcode.Opcode.Halt
+import intcode.Opcode.Mul
+import intcode.OpcodeParameter.AddressParameter
+import intcode.OpcodeParameter.ValueParameter
+
 class IntcodeInterpreter(initialMemory: List<Int>, var ip: Int = 0) {
     private val _memory: IntArray = initialMemory.toIntArray()
 
@@ -8,7 +15,7 @@ class IntcodeInterpreter(initialMemory: List<Int>, var ip: Int = 0) {
 
     fun run() {
         while (true) {
-            val opcode = parseOpcode()
+            val opcode = decodeInstructionToOpcode()
             val shouldContinue = executeOpcode(opcode)
 
             if (ip >= _memory.size - 1 || !shouldContinue) {
@@ -17,29 +24,76 @@ class IntcodeInterpreter(initialMemory: List<Int>, var ip: Int = 0) {
         }
     }
 
-    fun executeOpcode(opcode: Opcode): Boolean {
+    private fun executeOpcode(opcode: Opcode): Boolean {
         when (opcode) {
-            is Opcode.Add -> setMemory(opcode.dst, getMemory(opcode.a) + getMemory(opcode.b))
-            is Opcode.Mul -> setMemory(opcode.dst, getMemory(opcode.a) * getMemory(opcode.b))
-            Opcode.Halt -> return false
+            is Add -> setMemory(opcode.dst, resolve(opcode.a) + resolve(opcode.b))
+            is Mul -> setMemory(opcode.dst, resolve(opcode.a) * resolve(opcode.b))
+            Halt -> return false
         }
-
-        ip += opcode.size
         return true
     }
 
-    fun parseOpcode(): Opcode {
-        return when (val opcode = _memory[ip]) {
-            1 -> Opcode.Add(getMemorySlice(3))
-            2 -> Opcode.Mul(getMemorySlice(3))
-            99 -> Opcode.Halt
-            else -> error("Unknown opcode: $opcode")
+    private fun resolve(opcodeParameter: OpcodeParameter): Int {
+        return when (opcodeParameter) {
+            is AddressParameter -> _memory[opcodeParameter.address]
+            is ValueParameter -> opcodeParameter.value
         }
     }
 
-    private fun getMemory(address: Address) = _memory[address.address]
-    private fun setMemory(address: Address, value: Int) {
+    private fun decodeInstructionToOpcode(): Opcode {
+        val decoded = decodeInstruction(_memory[ip++])
+        return when (val opcode = decoded.opcode) {
+            1 -> Add(param(decoded.mode(0)), param(decoded.mode(1)), positionParam())
+            2 -> Mul(param(decoded.mode(0)), param(decoded.mode(1)), positionParam())
+            99 -> Halt
+            else -> error("Unknown opcode: $opcode at ${ip-1}: ${dumpMemory(ip-1)}")
+        }
+    }
+
+    private fun param(mode: ParameterMode): OpcodeParameter {
+        return when (mode) {
+            POSITION -> positionParam()
+            IMMEDIATE -> immediateParam()
+        }
+    }
+
+    private fun positionParam() = AddressParameter(_memory[ip++])
+    private fun immediateParam() = ValueParameter(_memory[ip++])
+
+    enum class ParameterMode {
+        POSITION,
+        IMMEDIATE,
+    }
+    data class DecodedInstruction(val opcode: Int, val parameterModes: List<ParameterMode>) {
+        fun mode(index: Int) = parameterModes.getOrNull(index) ?: POSITION
+    }
+    fun decodeInstruction(instruction: Int): DecodedInstruction {
+        val opcode = (instruction / 10) % 10 * 10 + instruction % 10
+
+        val parameterModes = mutableListOf<ParameterMode>()
+        var remaining = instruction / 100
+        while (remaining > 0) {
+            parameterModes +=
+                (remaining % 10).let {
+                    when (it) {
+                        0 -> POSITION
+                        1 -> IMMEDIATE
+                        else -> error("Unknown parameter mode: $it")
+                    }
+                }
+
+            remaining /= 10
+        }
+
+        return DecodedInstruction(opcode, parameterModes)
+    }
+
+    private fun setMemory(address: AddressParameter, value: Int) {
         _memory[address.address] = value
     }
-    private fun getMemorySlice(count: Int) = _memory.sliceArray(ip + 1..ip + count)
+
+    private fun dumpMemory(at: Int, context: Int = 5) =
+        _memory.withIndex().toList().slice(at - context..at + context).map {
+            if (it.index == at) "**${it.value}**" else it.value.toString()
+        }
 }

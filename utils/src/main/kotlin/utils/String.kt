@@ -18,7 +18,7 @@ fun <T> String.twoParts(char: Char, block: (String) -> T): Pair<T, T> =
     this.twoParts(char).map(block).let { (a, b) -> Pair(a, b) }
 
 fun String.match(@Language("regexp") regex: String): MatchResult.Destructured =
-    regex.toRegex().find(this)?.destructured ?: error("$regex did not match $this")
+    regex.toRegex().find(this)?.destructured ?: error("$regex did not match string [$this]")
 
 fun String.matchOrNull(@Language("regexp") regex: String): MatchResult.Destructured? =
     regex.toRegex().find(this)?.destructured

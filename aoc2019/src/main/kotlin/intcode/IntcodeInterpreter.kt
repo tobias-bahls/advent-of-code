@@ -11,8 +11,9 @@ import intcode.Operation.Input
 import intcode.Operation.Mul
 import intcode.Operation.Output
 import intcode.Param.AddressParam
+import intcode.Param.RelativeParam
 import intcode.Param.ValueParam
-import utils.toInt
+import utils.toLong
 
 enum class InterpreterStatus {
     INITIAL,
@@ -22,15 +23,13 @@ enum class InterpreterStatus {
     WAITING_FOR_INPUT
 }
 
-class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList()) {
+class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyList()) {
     private var ip = 0
-    private val _memory: IntArray = initialMemory.toIntArray()
-    private val _input: MutableList<Int> = input.toMutableList()
-    private val _output: MutableList<Int> = mutableListOf()
+    private var relativeBase = 0
+    private val _memory = ArrayList<Long>(initialMemory)
+    private val _input: MutableList<Long> = input.toMutableList()
+    private val _output: MutableList<Long> = mutableListOf()
     private var _status: InterpreterStatus = INITIAL
-
-    val memory
-        get() = _memory.toList()
 
     val output
         get() = _output.toList()
@@ -50,7 +49,7 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
             ip = result.newIp
 
             when {
-                ip >= memory.size - 1 -> {
+                ip >= _memory.size - 1 -> {
                     _status = END_OF_PROGRAM
                     return END_OF_PROGRAM
                 }
@@ -76,11 +75,11 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
     private fun executeInstruction(instruction: DecodedInstruction): ExecutionResult {
         return when (val op = instruction.operation) {
             is Add -> {
-                setMemory(op.dst, resolve(op.a) + resolve(op.b))
+                setMemory(op.dst, resolveForRead(op.a) + resolveForRead(op.b))
                 advanceIp(instruction)
             }
             is Mul -> {
-                setMemory(op.dst, resolve(op.a) * resolve(op.b))
+                setMemory(op.dst, resolveForRead(op.a) * resolveForRead(op.b))
                 advanceIp(instruction)
             }
             is Input -> {
@@ -92,29 +91,33 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
                 }
             }
             is Output -> {
-                produceOutput(resolve(op.value))
+                produceOutput(resolveForRead(op.value))
                 advanceIp(instruction)
             }
             is Operation.JumpIfTrue -> {
-                if (resolve(op.test) != 0) {
-                    setIp(resolve(op.dst))
+                if (resolveForRead(op.test) != 0L) {
+                    setIp(resolveForRead(op.dst).toInt())
                 } else {
                     advanceIp(instruction)
                 }
             }
             is Operation.JumpIfFalse -> {
-                if (resolve(op.test) == 0) {
-                    setIp(resolve(op.dst))
+                if (resolveForRead(op.test) == 0L) {
+                    setIp(resolveForRead(op.dst).toInt())
                 } else {
                     advanceIp(instruction)
                 }
             }
             is Operation.LessThan -> {
-                setMemory(op.dst, (resolve(op.a) < resolve(op.b)).toInt())
+                setMemory(op.dst, (resolveForRead(op.a) < resolveForRead(op.b)).toLong())
                 advanceIp(instruction)
             }
             is Operation.Equals -> {
-                setMemory(op.dst, (resolve(op.a) == resolve(op.b)).toInt())
+                setMemory(op.dst, (resolveForRead(op.a) == resolveForRead(op.b)).toLong())
+                advanceIp(instruction)
+            }
+            is Operation.AdjustRelativeBase -> {
+                relativeBase += resolveForRead(op.a).toInt()
                 advanceIp(instruction)
             }
             is Halt -> halt(instruction)
@@ -128,26 +131,47 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
     private fun halt(instruction: DecodedInstruction): ExecutionResult =
         advanceIp(instruction).copy(shouldHalt = true)
 
-    private fun resolve(param: Param): Int {
+    private fun resolveForRead(param: Param): Long {
         return when (param) {
-            is AddressParam -> _memory[param.address]
+            is AddressParam -> getMemory(param.address)
             is ValueParam -> param.value
+            is RelativeParam -> getMemory(relativeBase + param.value)
         }
     }
 
-    private fun setMemory(address: AddressParam, value: Int) {
-        _memory[address.address] = value
+    private fun resolveForWrite(param: Param): Int {
+        return when (param) {
+            is AddressParam -> param.address
+            is ValueParam -> param.value.toInt()
+            is RelativeParam -> relativeBase + param.value
+        }
     }
+
+    private fun setMemory(addressParam: Param, value: Long) {
+        val address = resolveForWrite(addressParam)
+        if (address >= _memory.size) {
+            padMemory(address)
+        }
+
+        _memory[address] = value
+    }
+
+    private fun padMemory(to: Int) {
+        val padding = (_memory.size..to).map { 0L }
+        _memory.addAll(padding)
+    }
+
+    fun getMemory(address: Int) = _memory.getOrNull(address) ?: 0
 
     private fun inputAvailable() = _input.isNotEmpty()
 
     private fun consumeInput() = _input.removeFirst()
 
-    fun addInput(value: Int) {
+    fun addInput(value: Long) {
         _input += value
     }
 
-    private fun produceOutput(value: Int) {
+    private fun produceOutput(value: Long) {
         _output += value
     }
 

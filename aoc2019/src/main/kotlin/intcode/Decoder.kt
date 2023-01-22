@@ -2,20 +2,19 @@ package intcode
 
 import intcode.Decoder.ParameterMode.IMMEDIATE
 import intcode.Decoder.ParameterMode.POSITION
+import intcode.Decoder.ParameterMode.RELATIVE
 import intcode.Operation.*
 import intcode.Param.AddressParam
+import intcode.Param.RelativeParam
 import intcode.Param.ValueParam
 import kotlin.properties.Delegates
 
 data class DecodedInstruction(val operation: Operation, val size: Int)
 
 class Decoder(private val interpreter: IntcodeInterpreter, private val initialPosition: Int) {
-    private val memory
-        get() = interpreter.memory
-
     private var offset: Int = 0
     private var paramIndex: Int = 0
-    private var opcode by Delegates.notNull<Int>()
+    private var opcode by Delegates.notNull<Long>()
     private lateinit var parameterModes: List<ParameterMode>
 
     fun decodeInstruction(): DecodedInstruction {
@@ -23,15 +22,16 @@ class Decoder(private val interpreter: IntcodeInterpreter, private val initialPo
 
         val operation =
             when (opcode) {
-                1 -> Add(dynamicParam(), dynamicParam(), addressParam())
-                2 -> Mul(dynamicParam(), dynamicParam(), addressParam())
-                3 -> Input(addressParam())
-                4 -> Output(dynamicParam())
-                5 -> JumpIfTrue(dynamicParam(), dynamicParam())
-                6 -> JumpIfFalse(dynamicParam(), dynamicParam())
-                7 -> LessThan(dynamicParam(), dynamicParam(), addressParam())
-                8 -> Equals(dynamicParam(), dynamicParam(), addressParam())
-                99 -> Halt
+                1L -> Add(param(), param(), param())
+                2L -> Mul(param(), param(), param())
+                3L -> Input(param())
+                4L -> Output(param())
+                5L -> JumpIfTrue(param(), param())
+                6L -> JumpIfFalse(param(), param())
+                7L -> LessThan(param(), param(), param())
+                8L -> Equals(param(), param(), param())
+                9L -> AdjustRelativeBase(param())
+                99L -> Halt
                 else ->
                     error(
                         "Unknown opcode: $opcode at ${initialPosition}: ${interpreter.dumpMemory(initialPosition)}")
@@ -43,21 +43,21 @@ class Decoder(private val interpreter: IntcodeInterpreter, private val initialPo
     enum class ParameterMode {
         POSITION,
         IMMEDIATE,
+        RELATIVE
     }
 
-    private fun dynamicParam(): Param {
+    private fun param(): Param {
         return when (parameterModes.getOrNull(paramIndex++)) {
-            POSITION -> addressParam()
-            IMMEDIATE -> valueParam()
-            null -> addressParam()
+            POSITION -> AddressParam(interpreter.getMemory(initialPosition + offset++).toInt())
+            IMMEDIATE -> ValueParam(interpreter.getMemory(initialPosition + offset++))
+            RELATIVE -> RelativeParam(interpreter.getMemory(initialPosition + offset++).toInt())
+            null -> AddressParam(interpreter.getMemory(initialPosition + offset++).toInt())
         }
     }
 
-    private fun addressParam() = AddressParam(memory[initialPosition + offset++])
-    private fun valueParam() = ValueParam(memory[initialPosition + offset++])
-
     private fun decodeOpcodeAndParameterModes() {
-        val instruction = memory[initialPosition + offset++]
+        val instruction = interpreter.getMemory(initialPosition + offset++)
+
         this.opcode = (instruction / 10) % 10 * 10 + instruction % 10
 
         val parameterModes = mutableListOf<ParameterMode>()
@@ -66,9 +66,12 @@ class Decoder(private val interpreter: IntcodeInterpreter, private val initialPo
             parameterModes +=
                 (remaining % 10).let {
                     when (it) {
-                        0 -> POSITION
-                        1 -> IMMEDIATE
-                        else -> error("Unknown parameter mode: $it")
+                        0L -> POSITION
+                        1L -> IMMEDIATE
+                        2L -> RELATIVE
+                        else ->
+                            error(
+                                "Unknown parameter mode: $it when parsing [$instruction] at $initialPosition")
                     }
                 }
 

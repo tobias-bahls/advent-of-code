@@ -6,8 +6,8 @@ import utils.part2
 import utils.permutations
 import utils.readResourceAsString
 
-private fun calculateThrusterOutputPart1(phaseSettings: List<Int>, program: List<Int>): Int {
-    return phaseSettings.fold(0) { currentOutput, currentPhaseSetting ->
+private fun calculateThrusterOutputPart1(phaseSettings: List<Long>, program: List<Long>): Long {
+    return phaseSettings.fold(0L) { currentOutput, currentPhaseSetting ->
         val interpreter = IntcodeInterpreter(program, listOf(currentPhaseSetting, currentOutput))
         interpreter.run()
 
@@ -15,7 +15,7 @@ private fun calculateThrusterOutputPart1(phaseSettings: List<Int>, program: List
     }
 }
 
-private fun calculateThrusterOutputPart2(phaseSettings: List<Int>, program: List<Int>): Int {
+private fun calculateThrusterOutputPart2(phaseSettings: List<Long>, program: List<Long>): Long {
     val computers = phaseSettings.map { IntcodeInterpreter(program, listOf(it)) }
     computers.forEach { it.run() }
 
@@ -44,6 +44,10 @@ fun main() {
     val input = readResourceAsString("/day07.txt")
     val program = parseIntcodeProgram(input)
 
-    part1 { (0..4).permutations().maxOf { calculateThrusterOutputPart1(it, program) } }
-    part2 { (5..9).permutations().maxOf { calculateThrusterOutputPart2(it, program) } }
+    part1 {
+        (0.toLong()..4.toLong()).permutations().maxOf { calculateThrusterOutputPart1(it, program) }
+    }
+    part2 {
+        (5.toLong()..9.toLong()).permutations().maxOf { calculateThrusterOutputPart2(it, program) }
+    }
 }

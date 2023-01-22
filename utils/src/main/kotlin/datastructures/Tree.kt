@@ -1,5 +1,7 @@
 package datastructures
 
+data class Traversal<N>(val node: Tree<N>.Node, val depth: Int)
+
 open class Tree<N> {
     private val idGen: IDGenerator = IDGenerator()
     private lateinit var rootNode: Node
@@ -17,9 +19,22 @@ open class Tree<N> {
         val children
             get(): List<ChildNode> = _children
 
-        fun addChild(id: String?, data: N) {
+        fun addChild(id: String?, data: N): ChildNode {
             val child = ChildNode(this, id ?: idGen.generate(), data)
             this._children.add(child)
+            return child
+        }
+
+        fun parents(): Sequence<Node> {
+            var current: Tree<N>.Node? = this
+
+            return generateSequence {
+                val elem = current ?: return@generateSequence null
+
+                current = elem.parent
+
+                elem
+            }
         }
 
         fun findChild(predicate: (N) -> Boolean): ChildNode? =
@@ -38,26 +53,38 @@ open class Tree<N> {
         return rootNode
     }
 
-    fun traversePreOrder(block: (Node, Int) -> Unit) {
-        fun traverse(currentDepth: Int, node: Node) {
-            block(node, currentDepth)
-            node.children.forEach { traverse(currentDepth + 1, it) }
+    fun findNode(nodeId: String) = allNodes().find { it.id == nodeId }
+
+    fun traversePreOrder(): Sequence<Traversal<N>> {
+        val queue = ArrayDeque<Traversal<N>>()
+
+        queue.addFirst(Traversal(root, 0))
+
+        return generateSequence {
+            if (queue.isEmpty()) {
+                return@generateSequence null
+            }
+            val current = queue.removeFirst()
+
+            current.node.children.forEach { queue.addFirst(Traversal(it, current.depth + 1)) }
+
+            current
         }
-
-        traverse(0, root)
     }
 
-    fun allNodes(): List<Node> {
-        val result = mutableListOf<Node>()
+    fun firstCommonAncestor(a: Node, b: Node): Node? {
+        val aParents = a.parents().toList()
+        val bParents = b.parents().toList()
 
-        traversePreOrder { node, _ -> result.add(node) }
-
-        return result
+        return aParents.intersect(bParents.toSet()).firstOrNull()
     }
+
+    fun allNodes(): List<Node> = traversePreOrder().map { it.node }.toList()
+
     fun prettyPrint(): String {
-        var builder = StringBuilder()
+        val builder = StringBuilder()
 
-        traversePreOrder { node, depth ->
+        traversePreOrder().forEach { (node, depth) ->
             builder.append("  ".repeat(depth))
             builder.append("- ${node.id} (${node.data})\n")
         }

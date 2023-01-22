@@ -106,6 +106,20 @@ fun <T> List<T>.updated(index: Int, element: T) = mapIndexed { idx, elem ->
     if (index == idx) element else elem
 }
 
+fun <T> List<T>.removeAt(index: Int) = mapIndexedNotNull { idx, elem ->
+    if (index == idx) null else elem
+}
+
 fun <T> T?.nullableToList(): List<T> = if (this == null) emptyList() else listOf(this)
 
 fun <T> List<T>.toFrequencyMap() = this.groupingBy { it }.eachCount()
+
+fun <T> Iterable<T>.permutations(): Iterable<List<T>> {
+
+    fun inner(current: List<T>, remaining: List<T>): List<List<T>> {
+        if (remaining.isEmpty()) return listOf(current)
+        return remaining.flatMapIndexed { idx, it -> inner(current + it, remaining.removeAt(idx)) }
+    }
+
+    return inner(emptyList(), this.toList())
+}

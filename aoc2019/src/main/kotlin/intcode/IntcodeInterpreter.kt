@@ -1,5 +1,10 @@
 package intcode
 
+import intcode.InterpreterStatus.END_OF_PROGRAM
+import intcode.InterpreterStatus.HALTED
+import intcode.InterpreterStatus.INITIAL
+import intcode.InterpreterStatus.RUNNING
+import intcode.InterpreterStatus.WAITING_FOR_INPUT
 import intcode.Operation.Add
 import intcode.Operation.Halt
 import intcode.Operation.Input
@@ -9,11 +14,20 @@ import intcode.Param.AddressParam
 import intcode.Param.ValueParam
 import utils.toInt
 
+enum class InterpreterStatus {
+    INITIAL,
+    RUNNING,
+    END_OF_PROGRAM,
+    HALTED,
+    WAITING_FOR_INPUT
+}
+
 class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList()) {
     private var ip = 0
     private val _memory: IntArray = initialMemory.toIntArray()
     private val _input: MutableList<Int> = input.toMutableList()
     private val _output: MutableList<Int> = mutableListOf()
+    private var _status: InterpreterStatus = INITIAL
 
     val memory
         get() = _memory.toList()
@@ -21,22 +35,44 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
     val output
         get() = _output.toList()
 
-    fun run() {
+    val lastOutput
+        get() = output.last()
+
+    val status
+        get() = _status
+
+    fun run(): InterpreterStatus {
+        _status = RUNNING
         while (true) {
             val instruction = decodeInstruction()
             val result = executeInstruction(instruction)
 
             ip = result.newIp
 
-            if (ip >= _memory.size - 1 || result.shouldHalt) {
-                return
+            when {
+                ip >= memory.size - 1 -> {
+                    _status = END_OF_PROGRAM
+                    return END_OF_PROGRAM
+                }
+                result.shouldHalt -> {
+                    _status = HALTED
+                    return HALTED
+                }
+                result.shouldWaitForInput -> {
+                    _status = WAITING_FOR_INPUT
+                    return WAITING_FOR_INPUT
+                }
             }
         }
     }
 
     private fun decodeInstruction() = Decoder(this, ip).decodeInstruction()
 
-    data class ExecutionResult(val newIp: Int, val shouldHalt: Boolean = false)
+    data class ExecutionResult(
+        val newIp: Int,
+        val shouldHalt: Boolean = false,
+        val shouldWaitForInput: Boolean = false
+    )
     private fun executeInstruction(instruction: DecodedInstruction): ExecutionResult {
         return when (val op = instruction.operation) {
             is Add -> {
@@ -48,8 +84,12 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
                 advanceIp(instruction)
             }
             is Input -> {
-                setMemory(op.dst, consumeInput())
-                advanceIp(instruction)
+                if (!inputAvailable()) {
+                    ExecutionResult(ip, shouldWaitForInput = true)
+                } else {
+                    setMemory(op.dst, consumeInput())
+                    advanceIp(instruction)
+                }
             }
             is Output -> {
                 produceOutput(resolve(op.value))
@@ -99,7 +139,14 @@ class IntcodeInterpreter(initialMemory: List<Int>, input: List<Int> = emptyList(
         _memory[address.address] = value
     }
 
+    private fun inputAvailable() = _input.isNotEmpty()
+
     private fun consumeInput() = _input.removeFirst()
+
+    fun addInput(value: Int) {
+        _input += value
+    }
+
     private fun produceOutput(value: Int) {
         _output += value
     }

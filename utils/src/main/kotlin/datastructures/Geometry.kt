@@ -2,6 +2,7 @@ package datastructures
 
 import datastructures.CardinalDirection.*
 import kotlin.math.absoluteValue
+import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -63,6 +64,11 @@ data class Point2D(val x: Int, val y: Int) {
         val c = cos(angleRad)
 
         return Point2D((x * c - y * s).roundToInt(), (x * s + y * c).roundToInt())
+    }
+
+    fun angleTo(other: Point2D): Double {
+        val d = Math.toDegrees(atan2((other.y - y).toDouble(), (other.x - x).toDouble())) + 90
+        return if (d < 0) d + 360 else d
     }
 
     override fun toString() = "($x,$y)"

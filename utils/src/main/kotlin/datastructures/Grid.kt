@@ -270,6 +270,12 @@ fun <T> parseAsciiGrid(
         row.toCharArray().mapIndexed { x, char -> processTile(x, y, char) }.filterNotNull()
     }
 
+fun parseAsciiPointGrid(
+    lines: List<String>,
+    pointMarker: Char = '#',
+): List<Point2D> =
+    parseAsciiGrid(lines) { x, y, char -> if (char == pointMarker) Point2D(x, y) else null }
+
 fun <T> parseGrid(input: String, tileData: (char: Char) -> T?): Grid<T> {
     val tiles =
         parseAsciiGrid(input) { x, y, char ->

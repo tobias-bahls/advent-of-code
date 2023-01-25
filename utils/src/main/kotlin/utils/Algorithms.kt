@@ -19,10 +19,10 @@ fun <T> visitAllNodes(initial: List<T>, produceNodes: (T) -> Collection<T>): Col
     return visited
 }
 
-fun untilTrue(condition: () -> Boolean): Int {
+fun untilTrue(condition: (currentIteration: Int) -> Boolean): Int {
     var iterations = 0
 
-    while (!condition()) iterations++
+    while (!condition(iterations)) iterations++
 
     return iterations
 }

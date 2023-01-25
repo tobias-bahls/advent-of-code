@@ -116,6 +116,12 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
     val neighboursOrthogonally
         get() = orthogonalNeighbourVectors.map { this + it }
 
+    val absoluteValue
+        get(): Point3D = Point3D(x.absoluteValue, y.absoluteValue, z.absoluteValue)
+
+    val components
+        get() = listOf(x, y, z)
+
     fun translate(translation: Point3D): Point3D {
         return Point3D(
             this.x + translation.x,

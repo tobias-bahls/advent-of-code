@@ -148,17 +148,20 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
     }
 
     private fun setMemory(addressParam: Param, value: Long) {
-        val address = resolveForWrite(addressParam)
-        if (address >= _memory.size) {
-            padMemory(address)
-        }
-
-        _memory[address] = value
+        poke(resolveForWrite(addressParam), value)
     }
 
     private fun padMemory(to: Int) {
         val padding = (_memory.size..to).map { 0L }
         _memory.addAll(padding)
+    }
+
+    fun poke(address: Int, value: Long) {
+        if (address >= _memory.size) {
+            padMemory(address)
+        }
+
+        _memory[address] = value
     }
 
     fun getMemory(address: Int) = _memory.getOrNull(address) ?: 0
@@ -173,6 +176,10 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
 
     private fun produceOutput(value: Long) {
         _output += value
+    }
+
+    fun clearOutput() {
+        _output.clear()
     }
 
     fun dumpMemory(at: Int, context: Int = 5) =

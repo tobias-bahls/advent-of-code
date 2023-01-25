@@ -1,4 +1,4 @@
-import utils.consecutiveElements
+import utils.consecutiveEqualElements
 import utils.parseClosedIntRange
 import utils.part1
 import utils.part2
@@ -19,7 +19,7 @@ private fun isValidPasswordPart2(number: Int): Boolean {
 
     return when {
         !isAllIncreasingOrSame(digits) -> false
-        !digits.consecutiveElements().any { it.size == 2 } -> false
+        !digits.consecutiveEqualElements().any { it.size == 2 } -> false
         else -> true
     }
 }

@@ -76,7 +76,7 @@ fun <T, R> Iterable<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
 fun <T, R> Sequence<T>.cartesian(other: Iterable<R>): Sequence<Pair<T, R>> =
     this.flatMap { a -> other.asSequence().map { b -> a to b } }
 
-fun <T> Iterable<T>.consecutiveElements(): Sequence<List<T>> {
+fun <T> Iterable<T>.consecutiveEqualElements(): Sequence<List<T>> {
     var sequence = this.asSequence()
 
     return generateSequence {

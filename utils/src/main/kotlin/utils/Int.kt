@@ -11,6 +11,8 @@ fun Long.pow(n: Int) = this.toDouble().pow(n).toLong()
 
 fun Int.clamp(min: Int, max: Int) = this.coerceAtMost(max).coerceAtLeast(min)
 
+fun Long.clamp(min: Long, max: Long) = this.coerceAtMost(max).coerceAtLeast(min)
+
 fun Int.gcd(other: Int): Int =
     if (other == 0) {
         this

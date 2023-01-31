@@ -58,6 +58,8 @@ fun <T> Sequence<T>.cycle(): Sequence<T> = generateSequence(this) { this }.flatt
 
 fun <T> List<T>.cycle(): Sequence<T> = this.asSequence().cycle()
 
+fun <T> List<T>.cycleGet(index: Int): T = get(index % size)
+
 data class Indexed<T>(val elem: T, val index: Int)
 
 fun <T> List<T>.zipWithIndex(): List<Indexed<T>> =

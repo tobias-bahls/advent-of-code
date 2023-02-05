@@ -11,7 +11,7 @@ private fun calculateThrusterOutputPart1(phaseSettings: List<Long>, program: Lis
         val interpreter = IntcodeInterpreter(program, listOf(currentPhaseSetting, currentOutput))
         interpreter.run()
 
-        interpreter.output.first()
+        interpreter.fullOutput.first()
     }
 }
 

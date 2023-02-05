@@ -30,12 +30,13 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
     private val _input: MutableList<Long> = input.toMutableList()
     private val _output: MutableList<Long> = mutableListOf()
     private var _status: InterpreterStatus = INITIAL
+    private var outputCursor = 0
 
-    val output
+    val fullOutput
         get() = _output.toList()
 
     val lastOutput
-        get() = output.last()
+        get() = fullOutput.last()
 
     val status
         get() = _status
@@ -170,8 +171,22 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
 
     private fun consumeInput() = _input.removeFirst()
 
+    fun addInput(values: List<Long>) {
+        _input += values
+    }
+
     fun addInput(value: Long) {
         _input += value
+    }
+
+    fun readOutput(): List<Long> {
+        if (outputCursor == _output.size - 1) {
+            return emptyList()
+        }
+
+        val result = _output.subList(outputCursor, _output.size)
+        outputCursor = _output.size
+        return result
     }
 
     private fun produceOutput(value: Long) {

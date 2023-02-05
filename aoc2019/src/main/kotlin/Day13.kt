@@ -59,7 +59,7 @@ fun main() {
     part1 {
         val interpreter = IntcodeInterpreter(program)
         interpreter.run()
-        interpreter.output
+        interpreter.fullOutput
             .windowed(3, 3)
             .map { parseProgramPixel(it) }
             .count { it.tile == ArcadeTile.BLOCK }
@@ -71,14 +71,14 @@ fun main() {
 
         fun gameTick() {
             interpreter.run()
-            screen.update(interpreter.output)
+            screen.update(interpreter.fullOutput)
             interpreter.clearOutput()
         }
 
         val ballPositions = mutableListOf<Point2D>()
         while (true) {
             gameTick()
-            screen.update(interpreter.output)
+            screen.update(interpreter.fullOutput)
             interpreter.clearOutput()
 
             if (interpreter.status != WAITING_FOR_INPUT) {

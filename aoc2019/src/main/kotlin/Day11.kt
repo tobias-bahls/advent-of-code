@@ -66,7 +66,7 @@ private fun runHullRobot(
         robotProgram.run()
 
         val (paintColor, turn) =
-            robotProgram.output
+            robotProgram.fullOutput
                 .takeLast(2)
                 .toPair()
                 .mapFirst { parseHullColor(it) }

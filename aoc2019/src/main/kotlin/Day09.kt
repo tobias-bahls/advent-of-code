@@ -12,12 +12,12 @@ fun main() {
         val interpreter = IntcodeInterpreter(parsed, listOf(1))
         interpreter.run()
 
-        interpreter.output.single()
+        interpreter.fullOutput.single()
     }
     part2 {
         val interpreter = IntcodeInterpreter(parsed, listOf(2))
         interpreter.run()
 
-        interpreter.output.single()
+        interpreter.fullOutput.single()
     }
 }

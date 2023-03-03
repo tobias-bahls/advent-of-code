@@ -37,10 +37,13 @@ fun <T> repeatedList(n: Int, block: () -> T) = 1.rangeTo(n).map { block() }
 
 data class Scored<T>(val score: Int, val neighbour: T)
 
+fun <T> floodFill(initial: T, determineNeighbours: (T) -> List<T>): Set<T> =
+    floodFill(initial, determineNeighbours, listOf { _ -> false })
+
 fun <T> floodFill(
     initial: T,
     determineNeighbours: (T) -> List<T>,
-    extraStopConditions: List<(T) -> Boolean> = listOf { _ -> false }
+    extraStopConditions: List<(T) -> Boolean>
 ): Set<T> {
     val visited = mutableSetOf<T>()
 

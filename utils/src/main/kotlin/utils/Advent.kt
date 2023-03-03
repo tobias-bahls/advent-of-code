@@ -44,6 +44,10 @@ fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)
 
 fun <T> part1(block: () -> T) = solve("Part 1", block)
 
+fun <T> xpart1(block: () -> T) = Unit
+
 fun <T> part2(block: () -> T) = solve("Part 2", block)
+
+fun <T> xpart2(block: () -> T) = Unit
 
 const val BLOCK = '█'

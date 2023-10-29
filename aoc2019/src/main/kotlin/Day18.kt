@@ -23,12 +23,15 @@ private sealed interface Day18GridTile {
     object Wall : Day18GridTile {
         override fun canWalk(keys: Set<Char>) = false
     }
+
     object Floor : Day18GridTile {
         override fun canWalk(keys: Set<Char>) = true
     }
+
     data class Key(val color: Char) : Day18GridTile {
         override fun canWalk(keys: Set<Char>) = true
     }
+
     data class Door(val color: Char) : Day18GridTile {
         override fun canWalk(keys: Set<Char>) = color in keys
     }
@@ -113,6 +116,7 @@ private data class Day18Robot(
             (it.to.data as Key).color !in allKeys
         }
     }
+
     fun walkPath(path: PathCache.PrecomputedPath): Day18Robot {
         val newKeys = keys + (path.to.data as Key).color
 

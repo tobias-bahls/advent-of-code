@@ -147,9 +147,11 @@ private enum class CubeFace(val cubeX: Int, val cubeY: Int) {
     SIX(0, 3);
 
     fun top(faceSize: Int) = cubeY * faceSize
+
     fun bottom(faceSize: Int) = top(faceSize) + faceSize - 1
 
     fun left(faceSize: Int) = cubeX * faceSize
+
     fun right(faceSize: Int) = left(faceSize) + faceSize - 1
 }
 

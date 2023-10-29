@@ -24,30 +24,38 @@ data class Point2D(val x: Int, val y: Int) {
 
     val top
         get() = Point2D(x, y - 1)
+
     val topLeft
         get() = Point2D(x - 1, y - 1)
+
     val topRight
         get() = Point2D(x + 1, y - 1)
 
     val left
         get() = Point2D(x - 1, y)
+
     val right
         get() = Point2D(x + 1, y)
 
     val bottom
         get() = Point2D(x, y + 1)
+
     val bottomLeft
         get() = Point2D(x - 1, y + 1)
+
     val bottomRight
         get() = Point2D(x + 1, y + 1)
 
     val neighboursOrthogonally
         get() = listOf(left, right, top, bottom)
+
     val neighbours
         get() = listOf(left, topLeft, top, topRight, right, bottomRight, bottom, bottomLeft)
 
     operator fun minus(other: Point2D): Point2D = Point2D(this.x - other.x, this.y - other.y)
+
     operator fun plus(other: Point2D): Point2D = Point2D(this.x + other.x, this.y + other.y)
+
     operator fun times(other: Int): Point2D = Point2D(this.x * other, this.y * other)
 
     fun distanceTo(other: Point2D): Double =
@@ -140,6 +148,7 @@ data class Point3D(val x: Int, val y: Int, val z: Int) {
             (this.z - other.z).absoluteValue
 
     operator fun plus(other: Point3D) = translate(other)
+
     operator fun minus(other: Point3D) = translate(other.negate())
 
     override fun toString() = "($x,$y,$z)"

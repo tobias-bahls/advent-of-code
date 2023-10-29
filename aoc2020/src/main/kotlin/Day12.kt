@@ -19,7 +19,9 @@ import utils.reduceTimes
 private sealed interface ShipInstruction {
     data class MoveInCardinalDirection(val direction: CardinalDirectionOrthogonal, val turns: Int) :
         ShipInstruction
+
     data class MoveForward(val turns: Int) : ShipInstruction
+
     data class Turn(val direction: LeftRightDirection, val angle: Int) : ShipInstruction
 }
 

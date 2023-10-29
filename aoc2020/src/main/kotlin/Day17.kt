@@ -24,6 +24,7 @@ private data class Point4D(val x: Int, val y: Int, val z: Int, val w: Int) {
                 .filter { it != ZERO }
                 .toList()
     }
+
     val neighbours
         get() = allNeighbourVectors.map { this + it }
 

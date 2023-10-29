@@ -30,6 +30,7 @@ private fun parseAmphipodType(char: Char) =
 private class Amphipod(val type: AmphipodType) {
     val energy
         get() = type.energy
+
     val targetRoom
         get() = type.targetRoom
 
@@ -126,9 +127,13 @@ private data class SideRoom(val index: Int, val size: Int, val amphipods: List<A
     val hallwayEntrance = (index + 1) * 2
 
     fun addAmphipod(amphipod: Amphipod) = copy(amphipods = listOf(amphipod) + amphipods)
+
     fun removeTopMostAmphipod() = copy(amphipods = amphipods.drop(1))
+
     fun topAmphipod() = amphipods.first()
+
     fun accepts(amphipod: Amphipod) = !full && hasOnlyAmphipodsOfType(amphipod.type)
+
     fun hasOnlyAmphipodsOfType(type: AmphipodType) = amphipods.all { it.type == type }
 
     operator fun contains(amphipod: Amphipod) = amphipod in amphipods

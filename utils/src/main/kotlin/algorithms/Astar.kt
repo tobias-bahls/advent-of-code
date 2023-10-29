@@ -34,6 +34,7 @@ class AstarBuilder<T : Any> {
     fun endCondition(block: (T) -> Boolean) {
         this.endCondition = block
     }
+
     fun neighbours(block: (T) -> List<Scored<T>>) {
         this.neighbours = block
     }
@@ -66,6 +67,7 @@ sealed interface AstarResult<T> {
     val cameFrom: Map<T, T>
 
     data class Success<T>(val found: T, override val cameFrom: Map<T, T>) : AstarResult<T>
+
     data class Failure<T>(override val cameFrom: Map<T, T>) : AstarResult<T>
 }
 

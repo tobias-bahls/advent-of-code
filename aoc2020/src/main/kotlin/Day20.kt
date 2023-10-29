@@ -112,6 +112,7 @@ private data class Day20State(val placedTiles: List<PlacedTile>, val cameraTiles
             tile.neighbourDirection(tileAt) == dir
         }
     }
+
     fun placeTile(tile: CameraTile, point: Point2D) =
         copy(placedTiles = placedTiles + PlacedTile(tile, point))
 

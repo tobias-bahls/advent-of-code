@@ -29,7 +29,9 @@ fun parseOperatorType(type: Int) =
 
 sealed interface Packet {
     val version: Int
+
     data class Literal(override val version: Int, val value: Long) : Packet
+
     data class Operator(
         override val version: Int,
         val type: OperatorType,
@@ -61,6 +63,7 @@ fun parseLiteralPacket(packetVersion: Int, reader: BinaryStringReader): Packet.L
 
 sealed interface LengthType {
     data class Length(val length: Int) : LengthType
+
     data class Count(val count: Int) : LengthType
 }
 

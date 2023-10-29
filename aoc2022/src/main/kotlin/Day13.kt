@@ -31,6 +31,7 @@ private sealed class Packet {
     class PacketList(val packets: List<Packet>) : Packet() {
         override fun toString() = "[${packets.joinToString(",")}]"
     }
+
     class PacketLiteral(val number: Int) : Packet() {
         override fun toString() = number.toString()
     }

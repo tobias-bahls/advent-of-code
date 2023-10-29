@@ -15,8 +15,10 @@ private value class TileData(val char: Char) {
                 in ('a'..'z') -> heightOf(char)
                 else -> error("Unknown char: $char")
             }
+
     val start
         get() = char == 'S'
+
     val end
         get() = char == 'E'
 

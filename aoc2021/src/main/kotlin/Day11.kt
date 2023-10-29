@@ -17,6 +17,7 @@ class Octopus(private var _energyLevel: Int) {
     fun resetEnergyLevel() {
         _energyLevel = 0
     }
+
     val flashing
         get() = _energyLevel > 9
 }

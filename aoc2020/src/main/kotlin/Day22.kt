@@ -12,7 +12,9 @@ private data class Player(val id: Int, val deck: List<Int>) {
         get() = deck.first()
 
     fun loseTopmostCard() = copy(deck = deck.drop(1))
+
     fun copyDeckForSubGame() = copy(deck = deck.drop(1).take(topCard))
+
     fun winCard(otherCard: Int) = copy(deck = deck.drop(1) + listOf(deck.first(), otherCard))
 }
 

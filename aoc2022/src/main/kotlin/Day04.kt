@@ -21,6 +21,7 @@ data class AssignmentPair(val first: IntRange, val second: IntRange) {
     }
 
     fun fullyContained(): Boolean = first.fullyContains(second) || second.fullyContains(first)
+
     fun overlaps(): Boolean = first.overlaps(second)
 }
 

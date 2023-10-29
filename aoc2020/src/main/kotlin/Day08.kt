@@ -7,7 +7,9 @@ import utils.updated
 
 private sealed interface Instruction {
     data class Nop(val by: Int) : Instruction
+
     data class Acc(val by: Int) : Instruction
+
     data class Jmp(val by: Int) : Instruction
 }
 

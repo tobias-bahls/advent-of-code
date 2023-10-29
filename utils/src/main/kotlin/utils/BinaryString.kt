@@ -23,6 +23,8 @@ class BinaryStringReader(private val str: BinaryString) {
     var offset = 0
 
     fun readInteger(len: Int) = str.readInteger(len, offset).also { offset += len }
+
     fun readBoolean() = str.readBoolean(offset).also { offset += 1 }
+
     fun readRaw(len: Int): String = str.readAtOffset(len, offset).also { offset += len }
 }

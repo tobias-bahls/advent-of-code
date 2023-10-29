@@ -73,6 +73,7 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
         val shouldHalt: Boolean = false,
         val shouldWaitForInput: Boolean = false
     )
+
     private fun executeInstruction(instruction: DecodedInstruction): ExecutionResult {
         return when (val op = instruction.operation) {
             is Add -> {
@@ -129,6 +130,7 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
 
     private fun advanceIp(instruction: DecodedInstruction): ExecutionResult =
         ExecutionResult(ip + instruction.size, false)
+
     private fun halt(instruction: DecodedInstruction): ExecutionResult =
         advanceIp(instruction).copy(shouldHalt = true)
 

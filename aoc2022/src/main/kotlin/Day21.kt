@@ -50,6 +50,7 @@ private sealed interface MonkeyExpression {
                 Plus(lhs, rhs)
             }
         }
+
         override fun toString() = "($lhs + $rhs)"
     }
 
@@ -66,8 +67,10 @@ private sealed interface MonkeyExpression {
                 Minus(lhs, rhs)
             }
         }
+
         override fun toString() = "($lhs - $rhs)"
     }
+
     data class Times(override val lhs: MonkeyExpression, override val rhs: MonkeyExpression) :
         BiOp {
 
@@ -81,8 +84,10 @@ private sealed interface MonkeyExpression {
                 Times(lhs, rhs)
             }
         }
+
         override fun toString() = "($lhs * $rhs)"
     }
+
     data class Divided(override val lhs: MonkeyExpression, override val rhs: MonkeyExpression) :
         BiOp {
 
@@ -99,16 +104,20 @@ private sealed interface MonkeyExpression {
 
         override fun toString() = "($lhs / $rhs)"
     }
+
     data class Literal(val literal: Long) : MonkeyExpression {
         override fun evaluate(ctx: EvaluationContext): MonkeyExpression = this
+
         override fun toString() = literal.toString()
     }
+
     data class Variable(val name: String) : MonkeyExpression {
         override fun evaluate(ctx: EvaluationContext): MonkeyExpression =
             (ctx.getVariable(name) ?: Unresolved(name)).evaluate(ctx)
 
         override fun toString() = name
     }
+
     data class Unresolved(val name: String) : MonkeyExpression {
         override fun evaluate(ctx: EvaluationContext): MonkeyExpression = this
 

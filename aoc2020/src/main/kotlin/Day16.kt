@@ -11,6 +11,7 @@ private data class Rule(val name: String, val ranges: List<IntRange>) {
 
 private data class RuleSet(val rules: List<Rule>) {
     fun isValid(value: Int) = rules.any { it.isValid(value) }
+
     fun isValid(ticket: Ticket) = ticket.fields.all { isValid(it) }
 }
 

@@ -57,6 +57,7 @@ private data class DockingProcessor(
 
 private sealed interface DockingProcessorInstruction {
     data class SetBitmask(val newMask: Bitmask) : DockingProcessorInstruction
+
     data class SetMemory(val index: Long, val to: Long) : DockingProcessorInstruction
 }
 

@@ -19,14 +19,17 @@ val cubeShape = listOf(Point2D(0, 1), Point2D(1, 1), Point2D(0, 0), Point2D(1, 0
 private class Rock(var points: List<Point2D>) {
     val leftEdge
         get() = points.minOf { it.x }
+
     val rightEdge
         get() = points.maxOf { it.x }
+
     val bottomEdge
         get() = points.minOf { it.y }
 
     fun move(by: Point2D) {
         points = points.map { it + by }
     }
+
     fun moveLeft() {
         move(Point2D(-1, 0))
     }

@@ -30,7 +30,9 @@ sealed interface Command {
     fun parseOutput(input: List<String>): Output = Output.None
 
     data class ChangeDir(val to: String) : Command
+
     object ChangeDirUp : Command
+
     object ListDir : Command {
         override fun parseOutput(input: List<String>): Output.DirectoryList {
             val entries = input.map { DirectoryEntry.parse(it) }
@@ -45,6 +47,7 @@ data class DirectoryEntry(val type: EntryType, val size: Int, val name: String) 
         DIR,
         FILE
     }
+
     companion object {
         fun parse(input: String): DirectoryEntry {
             val (sizeOrDir, name) = input.match("""(\d+|dir) (.+)""").toPair()
@@ -60,6 +63,7 @@ data class DirectoryEntry(val type: EntryType, val size: Int, val name: String) 
 
 sealed interface Output {
     object None : Output
+
     data class DirectoryList(val entries: List<DirectoryEntry>) : Output
 }
 

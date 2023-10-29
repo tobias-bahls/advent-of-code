@@ -28,6 +28,7 @@ private sealed class SnailfishNumber {
 
         override fun magnitude(): Int = number
     }
+
     class Pair constructor(var left: SnailfishNumber, var right: SnailfishNumber) :
         SnailfishNumber() {
 

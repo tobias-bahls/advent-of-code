@@ -61,9 +61,11 @@ class DijkstraBuilder<T : Any> {
 
             endCondition ?: { it == end }
         }
+
     fun endCondition(block: (T) -> Boolean) {
         this.endCondition = block
     }
+
     fun neighbours(block: (T) -> List<Scored<T>>) {
         this.neighbours = block
     }
@@ -83,6 +85,7 @@ sealed interface DijkstraResult<T> {
     val prev: Map<T, T>
 
     data class Success<T>(val found: T, override val prev: Map<T, T>) : DijkstraResult<T>
+
     data class Failure<T>(override val prev: Map<T, T>) : DijkstraResult<T>
 }
 

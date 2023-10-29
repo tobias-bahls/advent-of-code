@@ -18,6 +18,7 @@ import utils.untilTrue
 
 sealed interface LeftRightDirection {
     object Left : LeftRightDirection
+
     object Right : LeftRightDirection
 }
 
@@ -25,6 +26,7 @@ sealed interface CardinalDirection {
     companion object {
         val ALL = listOf(North, NorthEast, East, SouthEast, South, SouthWest, West, NorthWest)
     }
+
     sealed interface CardinalDirectionOrthogonal : CardinalDirection {
         companion object {
             val ALL = listOf(North, East, South, West)
@@ -60,6 +62,7 @@ sealed interface CardinalDirection {
     object South : CardinalDirectionOrthogonal
 
     object SouthWest : CardinalDirection
+
     object West : CardinalDirectionOrthogonal
 
     object NorthWest : CardinalDirection
@@ -95,6 +98,7 @@ data class Tile<T>(val point: Point2D, val data: T) {
 
     fun adjacentOrthogonally(): List<Tile<T>> =
         point.neighboursOrthogonally.mapNotNull { grid.tileAt(it) }
+
     fun adjacent(): List<Tile<T>> = point.neighbours.mapNotNull { grid.tileAt(it) }
 
     fun directNeighboursInDirections(directions: List<CardinalDirection>): List<Tile<T>> =
@@ -204,6 +208,7 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
         }
 
     data class TransformUntilStableResult<T>(val iterations: Int, val resultGrid: Grid<T>)
+
     fun transformUntilStable(transform: (Grid<T>) -> Grid<T>): TransformUntilStableResult<T> {
         var currentGrid = this
         val iterations =
@@ -289,9 +294,11 @@ fun <T> parseGrid(input: String, tileData: (char: Char) -> T?): Grid<T> {
 
 class SparseGrid(initialPoints: Set<Point2D>) {
     private var _points: MutableSet<Point2D>
+
     init {
         _points = initialPoints.toMutableSet()
     }
+
     val width: Int = points.maxOf { it.x }
     val height: Int = points.maxOf { it.y }
 
@@ -299,6 +306,7 @@ class SparseGrid(initialPoints: Set<Point2D>) {
         get() = _points
 
     fun hasPoint(x: Int, y: Int): Boolean = hasPoint(Point2D(x, y))
+
     fun hasPoint(point: Point2D): Boolean = points.contains(point)
 
     fun addPoint(point: Point2D) {

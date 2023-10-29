@@ -65,6 +65,7 @@ private class Cups(cups: List<Int>) {
     fun findNode(label: Int) = cupsByLabel[label]!!
 
     fun cupSequence() = cupSequence(currentCup)
+
     fun cupSequence(start: Cup): Sequence<Cup> {
         var current = start
         return generateSequence {

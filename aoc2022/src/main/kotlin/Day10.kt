@@ -7,6 +7,7 @@ import utils.twoParts
 
 sealed class Day10Instruction(val cycles: Int) {
     object Noop : Day10Instruction(cycles = 1)
+
     data class AddX(val v: Int) : Day10Instruction(cycles = 2)
 }
 
@@ -36,6 +37,7 @@ class CPU(private val program: List<Day10Instruction>) {
 
         return x in spriteRange
     }
+
     private fun cycle(): CPU {
         if (instructionRunLength == currentInstruction.cycles) {
             executeInstruction(currentInstruction)

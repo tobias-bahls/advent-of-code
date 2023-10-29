@@ -13,6 +13,7 @@ class Graph<I, N, E> {
             return if (data == Unit) "" else data.toString()
         }
     }
+
     inner class Node(val id: I, val data: N, private var _edges: MutableList<Edge>) {
         val edges
             get(): List<Edge> = _edges
@@ -57,6 +58,7 @@ class Graph<I, N, E> {
     fun upsertNode(id: I, data: N) = findNode(id) ?: addNode(id, data)
 
     fun findNode(id: I): Node? = _nodes[id]
+
     fun getNode(id: I): Node = findNode(id) ?: error("Could not find node with id [$id]")
 
     fun addBidirectionalEdge(node1: Node, node2: Node, data: E) {
@@ -79,6 +81,7 @@ class Graph<I, N, E> {
 
         return (listOf("digraph G {") + nodeDescription + listOf("}")).joinToString("\n")
     }
+
     fun depthFirstTraversal(
         start: Node,
         end: Node,

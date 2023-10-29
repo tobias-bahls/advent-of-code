@@ -32,6 +32,7 @@ sealed interface ValidationResult {
     object Success : ValidationResult
 
     data class Invalid(val char: ChunkCharacter, val index: Int) : ValidationResult
+
     data class Incomplete(val missing: List<ChunkCharacter>) : ValidationResult
 }
 

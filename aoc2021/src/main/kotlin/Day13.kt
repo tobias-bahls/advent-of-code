@@ -17,6 +17,7 @@ import utils.wrap
 
 sealed interface Instruction {
     data class FoldX(val at: Int) : Instruction
+
     data class FoldY(val at: Int) : Instruction
 }
 

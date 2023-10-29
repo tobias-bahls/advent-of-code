@@ -14,7 +14,9 @@ import utils.twoParts
 
 private data class QuantityAndElement(val quantity: Long, val element: String) {
     operator fun times(times: Long) = copy(quantity = quantity * times)
+
     operator fun plus(by: Long) = copy(quantity = quantity + by)
+
     operator fun minus(by: Long) = copy(quantity = quantity - by)
 }
 

@@ -49,6 +49,7 @@ enum class Choice {
             }
         }
     }
+
     fun score() =
         when (this) {
             ROCK -> 1

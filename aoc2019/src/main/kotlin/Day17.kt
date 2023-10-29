@@ -31,6 +31,7 @@ private data class Robot(
     val nextPoint = position + direction.movementVector
 
     fun turn(dir: LeftRightDirection) = copy(direction = direction.turn(dir))
+
     fun forward() = copy(position = nextPoint)
 }
 

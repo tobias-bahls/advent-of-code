@@ -49,6 +49,7 @@ private class Screen {
     }
 
     fun paddlePosition() = pixels.entries.find { it.value == PADDLE }!!.key
+
     fun ballPosition() = pixels.entries.find { it.value == BALL }!!.key
 }
 

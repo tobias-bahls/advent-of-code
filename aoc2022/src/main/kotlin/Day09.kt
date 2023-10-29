@@ -42,8 +42,10 @@ fun parseInstruction(input: String) =
 data class Rope(val segments: List<Point2D>) {
     val head
         get() = segments.first()
+
     val last
         get() = segments.last()
+
     val tail
         get() = segments.drop(1)
 }

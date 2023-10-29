@@ -7,14 +7,19 @@ enum class QueueMode {
 
 sealed interface QueueOperation<in T> {
     data class Enqueue<T>(val elems: Collection<T>) : QueueOperation<T>
+
     object Skip : QueueOperation<Any?>
+
     object Exit : QueueOperation<Any?>
 }
 
 class QueueOperations<T> {
     fun enqueue(elem: T) = QueueOperation.Enqueue(listOf(elem))
+
     fun enqueue(elems: Collection<T>) = QueueOperation.Enqueue(elems)
+
     fun skip() = QueueOperation.Skip
+
     fun exit() = QueueOperation.Exit
 }
 

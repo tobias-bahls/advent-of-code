@@ -265,15 +265,23 @@ fun <T> parseGridWithEmptyTiles(input: String, tileData: (char: Char) -> T): Gri
 }
 
 fun <T> parseAsciiGrid(input: String, processTile: (x: Int, y: Int, char: Char) -> T?): List<T> =
-    parseAsciiGrid(input.lines(), processTile)
+    parseAsciiGrid(input.lines(), true, processTile)
 
 fun <T> parseAsciiGrid(
     lines: List<String>,
-    processTile: (x: Int, y: Int, char: Char) -> T?
-): List<T> =
-    lines.filterNotBlank().flatMapIndexed { y, row ->
+    trim: Boolean = true,
+    processTile: (x: Int, y: Int, char: Char) -> T?,
+): List<T> {
+    val rows =
+        if (trim) {
+            lines.filterNotBlank()
+        } else {
+            lines
+        }
+    return rows.flatMapIndexed { y, row ->
         row.toCharArray().mapIndexed { x, char -> processTile(x, y, char) }.filterNotNull()
     }
+}
 
 fun parseAsciiPointGrid(
     lines: List<String>,

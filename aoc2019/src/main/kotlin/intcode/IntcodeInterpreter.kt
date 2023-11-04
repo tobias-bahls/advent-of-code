@@ -173,6 +173,8 @@ class IntcodeInterpreter(initialMemory: List<Long>, input: List<Long> = emptyLis
 
     private fun consumeInput() = _input.removeFirst()
 
+    fun addInput(string: String) = addInput(string.map { it.code.toLong() })
+
     fun addInput(values: List<Long>) {
         _input += values
     }

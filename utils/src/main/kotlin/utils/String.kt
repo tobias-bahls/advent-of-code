@@ -34,3 +34,5 @@ fun MatchResult.Destructured?.singleMatchOrNull(): String? = this?.toList()?.fir
 
 fun <T> String.parseLines(parser: (String) -> T): List<T> =
     this.lines().filterNotBlank().map(parser)
+
+fun String.toFrequencyMap() = toList().toFrequencyMap()

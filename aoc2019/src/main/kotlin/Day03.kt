@@ -55,12 +55,6 @@ private fun findWireIntersections(
 }
 
 fun main() {
-    val sample =
-        """
-        R8,U5,L5,D3
-        U7,R6,D4,L4
-    """
-            .trimIndent()
     val input = readResourceAsString("/day03.txt")
     val (first, second) = input.parseLines { parseWire(it) }
 

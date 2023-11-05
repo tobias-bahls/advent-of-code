@@ -1,6 +1,5 @@
 package utils
 
-import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 enum class Part {
@@ -30,7 +29,6 @@ fun <T> Iterable<T>.dumpList(prefix: String = ""): Iterable<T> {
 fun readResourceAsString(name: String): String =
     object {}::class.java.getResource(name)?.readText() ?: error("Did not find file $name")
 
-@OptIn(ExperimentalTime::class)
 fun <T> solve(msg: String, block: () -> T): T {
     var result: T
     val duration = measureTime { result = block() }
@@ -40,14 +38,15 @@ fun <T> solve(msg: String, block: () -> T): T {
     return result
 }
 
+@Suppress("UNUSED_PARAMETER")
 fun <T> sample(name: String = "Sample", block: () -> T) = solve("Sample", block)
 
 fun <T> part1(block: () -> T) = solve("Part 1", block)
 
-fun <T> xpart1(block: () -> T) = Unit
+@Suppress("UNUSED_PARAMETER") fun <T> xpart1(block: () -> T) = Unit
 
 fun <T> part2(block: () -> T) = solve("Part 2", block)
 
-fun <T> xpart2(block: () -> T) = Unit
+@Suppress("UNUSED_PARAMETER") fun <T> xpart2(block: () -> T) = Unit
 
 const val BLOCK = '█'

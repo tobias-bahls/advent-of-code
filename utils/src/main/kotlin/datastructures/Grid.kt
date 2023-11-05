@@ -17,9 +17,9 @@ import utils.toRangeBy
 import utils.untilTrue
 
 sealed interface LeftRightDirection {
-    object Left : LeftRightDirection
+    data object Left : LeftRightDirection
 
-    object Right : LeftRightDirection
+    data object Right : LeftRightDirection
 }
 
 sealed interface CardinalDirection {
@@ -51,21 +51,21 @@ sealed interface CardinalDirection {
             }
     }
 
-    object North : CardinalDirectionOrthogonal
+    data object North : CardinalDirectionOrthogonal
 
-    object NorthEast : CardinalDirection
+    data object NorthEast : CardinalDirection
 
-    object East : CardinalDirectionOrthogonal
+    data object East : CardinalDirectionOrthogonal
 
-    object SouthEast : CardinalDirection
+    data object SouthEast : CardinalDirection
 
-    object South : CardinalDirectionOrthogonal
+    data object South : CardinalDirectionOrthogonal
 
-    object SouthWest : CardinalDirection
+    data object SouthWest : CardinalDirection
 
-    object West : CardinalDirectionOrthogonal
+    data object West : CardinalDirectionOrthogonal
 
-    object NorthWest : CardinalDirection
+    data object NorthWest : CardinalDirection
 }
 
 fun parseCardinalDirection(input: String) =
@@ -237,7 +237,7 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     }
 
     fun dijkstra(start: Tile<T>, end: Tile<T>, neighbours: (Tile<T>) -> List<Scored<Tile<T>>>) =
-        dijkstraPath<Tile<T>> {
+        dijkstraPath {
             this.start = start
             this.end = end
 

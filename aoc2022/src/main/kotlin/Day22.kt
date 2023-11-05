@@ -57,7 +57,7 @@ private data class PositionInGrove(val point: Point2D, val facingDirection: Faci
         }
 
     fun cubeFace(faceSize: Int): CubeFace =
-        CubeFace.values().find {
+        CubeFace.entries.find {
             point.x in (it.left(faceSize)..it.right(faceSize)) &&
                 point.y in (it.top(faceSize)..it.bottom(faceSize))
         }
@@ -211,8 +211,8 @@ fun main() {
         val faceSize = 50
         fun wrap(
             currentPosition: PositionInGrove,
-            unused1: Grid<GroveTile>,
-            unused2: Point2D
+            @Suppress("UNUSED_PARAMETER") unused1: Grid<GroveTile>,
+            @Suppress("UNUSED_PARAMETER") unused2: Point2D
         ): WrapResult {
             val currentFace = currentPosition.cubeFace(faceSize)
             val facingDirection = currentPosition.facingDirection

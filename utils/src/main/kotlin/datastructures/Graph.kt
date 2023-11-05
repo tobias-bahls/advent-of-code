@@ -39,9 +39,7 @@ class Graph<I, N, E> {
 
             other as Graph<*, *, *>.Node
 
-            if (id != other.id) return false
-
-            return true
+            return id == other.id
         }
 
         override fun hashCode(): Int {

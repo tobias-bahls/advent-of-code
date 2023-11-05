@@ -99,13 +99,6 @@ private fun solvePart2(tileMap: SparseGrid): Int {
 }
 
 fun main() {
-    val sample =
-        """
-        498,4 -> 498,6 -> 496,6
-        503,4 -> 502,4 -> 502,9 -> 494,9
-    """
-            .trimIndent()
-
     val input = readResourceAsString("/day14.txt")
 
     val allBoulders =

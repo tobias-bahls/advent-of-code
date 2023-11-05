@@ -178,8 +178,10 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
         get() = _tiles.values
 
     val xRange: ClosedRange<Int> by lazy { _tiles.values.toRangeBy { it.point.x } }
+    val xRangeProgression: IntProgression = (xRange.start..xRange.endInclusive)
 
     val yRange: ClosedRange<Int> by lazy { _tiles.values.toRangeBy { it.point.y } }
+    val yRangeProgression: IntProgression = (yRange.start..yRange.endInclusive)
 
     fun rowBounds(row: Int) = tiles.filter { it.point.y == row }.toRangeBy { it.point.x }
 
@@ -188,6 +190,14 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     fun inBounds(point: Point2D) = point.x in xRange && point.y in yRange
 
     fun tileAt(point: Point2D) = _tiles[wrapAround(point)]
+
+    fun northEdge() = tiles.filter { it.point.y == 0 }
+
+    fun eastEdge() = tiles.filter { it.point.x == width - 1 }
+
+    fun southEdge() = tiles.filter { it.point.y == height - 1 }
+
+    fun westEdge() = tiles.filter { it.point.x == 0 }
 
     fun addTile(point: Point2D, data: T) {
         val tile = Tile(point, data)

@@ -82,6 +82,19 @@ data class Point2D(val x: Int, val y: Int) {
     override fun toString() = "($x,$y)"
 }
 
+data class Rectangle(val position: Point2D, val width: Int, val height: Int) {
+    val x1 = position.x
+    val x2 = position.x + width
+
+    val y1 = position.y
+    val y2 = position.y + height
+
+    val xRange = (x1 until x2)
+    val yRange = (y1 until y2)
+
+    val points by lazy { xRange.flatMap { x -> yRange.map { y -> Point2D(x, y) } } }
+}
+
 data class Line(val from: Point2D, val to: Point2D)
 
 fun parsePoint2D(input: String) =

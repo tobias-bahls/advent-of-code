@@ -10,6 +10,10 @@ class Counter<T> {
         incrementBy(elem, 1)
     }
 
+    fun increment(elems: Collection<T>) {
+        elems.forEach { increment(it) }
+    }
+
     operator fun contains(elem: T) = counts.containsKey(elem)
 
     fun incrementBy(elem: T, by: Int) {

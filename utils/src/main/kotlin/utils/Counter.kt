@@ -24,5 +24,9 @@ class Counter<T> {
         }
     }
 
+    fun max(): Int = _counts.maxByOrNull { it.value }?.value ?: 0
+
+    fun maxKey(): T? = _counts.maxByOrNull { it.value }?.key
+
     override fun toString() = counts.toString()
 }

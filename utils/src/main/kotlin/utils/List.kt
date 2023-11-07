@@ -91,6 +91,22 @@ fun <T> Iterable<T>.consecutiveEqualElements(): Sequence<List<T>> {
     }
 }
 
+fun <T> Iterable<T>.chunksDelimitedBy(block: (T) -> Boolean): Sequence<List<T>> {
+    var sequence = this.asSequence()
+
+    return generateSequence {
+        val delimiter = sequence.take(1).firstOrNull()
+        if (delimiter == null || !block(delimiter)) {
+            return@generateSequence null
+        }
+
+        val consecutive = sequence.drop(1).takeWhile { !block(it) }
+        sequence = sequence.drop(1).dropWhile { !block(it) }
+
+        (sequenceOf(delimiter) + consecutive).toList()
+    }
+}
+
 fun List<Boolean>.interpretAsBinary() =
     joinToString("") {
             if (it) {

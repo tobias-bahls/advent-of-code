@@ -17,7 +17,7 @@ import utils.part1
 import utils.part2
 import utils.queue
 import utils.readResourceAsString
-import utils.untilTrue
+import utils.repeatUntilTrue
 
 private fun IntcodeInterpreter.move(dir: CardinalDirectionOrthogonal) {
     val input =
@@ -137,7 +137,7 @@ fun main() {
             discoveredPoints.entries.filter { it.value == FLOOR }.map { it.key }.toMutableSet()
         val oxygenTiles = mutableSetOf(targetTile)
 
-        untilTrue {
+        repeatUntilTrue {
             val newOxygenTiles =
                 oxygenTiles
                     .flatMap { it.neighboursOrthogonally }

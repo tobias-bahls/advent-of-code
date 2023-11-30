@@ -1,5 +1,6 @@
 package utils
 
+import algorithms.repeat
 import java.util.Stack
 
 fun <T> visitAllNodes(initial: List<T>, produceNodes: (T) -> Collection<T>): Collection<T> {
@@ -19,13 +20,15 @@ fun <T> visitAllNodes(initial: List<T>, produceNodes: (T) -> Collection<T>): Col
     return visited
 }
 
-fun untilTrue(condition: (currentIteration: Int) -> Boolean): Int {
-    var iterations = 0
-
-    while (!condition(iterations)) iterations++
-
-    return iterations
-}
+fun repeatUntilTrue(condition: (currentIteration: Int) -> Boolean) =
+    repeat(Unit) {
+            if (condition(currentIteration)) {
+                stop()
+            } else {
+                next(Unit)
+            }
+        }
+        .iterations
 
 fun <T> reduceTimes(n: Int, initial: T, operation: (T) -> T) =
     1.rangeTo(n).fold(initial) { it, _ -> operation(it) }

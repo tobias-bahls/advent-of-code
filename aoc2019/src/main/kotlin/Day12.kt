@@ -9,7 +9,7 @@ import utils.part1
 import utils.part2
 import utils.readResourceAsString
 import utils.reduceTimes
-import utils.untilTrue
+import utils.repeatUntilTrue
 
 private data class Moon(val id: Int, val position: Point3D, val velocity: Point3D) {
     private val potentialEnergy = position.absoluteValue.components.sum()
@@ -89,7 +89,7 @@ fun main() {
         var zRepeat: Long? = null
 
         var current = parsed
-        untilTrue {
+        repeatUntilTrue {
             val currentIteration = it.toLong() + 1
             current = step(current)
 

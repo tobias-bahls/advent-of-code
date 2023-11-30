@@ -6,7 +6,7 @@ import utils.part1
 import utils.part2
 import utils.readResourceAsString
 import utils.reduceTimes
-import utils.untilTrue
+import utils.repeatUntilTrue
 
 private data class Elf(
     val directionList: List<CardinalDirectionOrthogonal> = listOf(North, South, West, East)
@@ -75,11 +75,11 @@ fun main() {
 
     part2 {
         var currentGrid = grid
-        untilTrue {
+        repeatUntilTrue {
             val newGrid = step(currentGrid)
 
             if (newGrid.tiles.map { it.point } == currentGrid.tiles.map { it.point }) {
-                return@untilTrue true
+                return@repeatUntilTrue true
             }
 
             currentGrid = newGrid

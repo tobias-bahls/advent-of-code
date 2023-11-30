@@ -13,8 +13,8 @@ import datastructures.LeftRightDirection.*
 import kotlin.math.absoluteValue
 import utils.Scored
 import utils.filterNotBlank
+import utils.repeatUntilTrue
 import utils.toRangeBy
-import utils.untilTrue
 
 sealed interface LeftRightDirection {
     data object Left : LeftRightDirection
@@ -222,7 +222,7 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     fun transformUntilStable(transform: (Grid<T>) -> Grid<T>): TransformUntilStableResult<T> {
         var currentGrid = this
         val iterations =
-            untilTrue {
+            repeatUntilTrue {
                 val nextGrid = transform(currentGrid)
 
                 if (currentGrid.hasSameTiles(nextGrid)) {

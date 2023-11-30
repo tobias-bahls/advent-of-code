@@ -5,8 +5,8 @@ import utils.applyEach
 import utils.part1
 import utils.part2
 import utils.readResourceAsString
+import utils.repeatUntilTrue
 import utils.times
-import utils.untilTrue
 import utils.visitAllNodes
 
 class Octopus(private var _energyLevel: Int) {
@@ -49,6 +49,6 @@ fun main() {
         val grid = parseGrid(input) { Octopus(it.digitToInt()) }
 
         // +1 because they started flashing in the step before the one that we're interested in.
-        untilTrue { step(grid).size == grid.tiles.size } + 1
+        repeatUntilTrue { step(grid).size == grid.tiles.size } + 1
     }
 }

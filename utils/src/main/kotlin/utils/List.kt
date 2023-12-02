@@ -17,7 +17,9 @@ fun <T> List<T>.applyEach(block: (T) -> Unit): List<T> =
 fun <T> List<T>.firstRest(): Pair<T, List<T>> = Pair(this.first(), this.drop(1))
 
 fun <T> List<T>.expectSize(expectedSize: Int): List<T> {
-    check(this.size == expectedSize) { "Size of list was ${this.size}, expected $expectedSize " }
+    check(this.size == expectedSize) {
+        "Size of list was ${this.size}, expected $expectedSize. Elements: $this"
+    }
     return this
 }
 

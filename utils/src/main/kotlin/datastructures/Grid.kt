@@ -183,7 +183,9 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     val yRange: ClosedRange<Int> by lazy { _tiles.values.toRangeBy { it.point.y } }
     val yRangeProgression: IntProgression = (yRange.start..yRange.endInclusive)
 
-    fun rowBounds(row: Int) = tiles.filter { it.point.y == row }.toRangeBy { it.point.x }
+    fun rowBounds(row: Int) = row(row).toRangeBy { it.point.x }
+
+    fun row(row: Int) = tiles.filter { it.point.y == row }
 
     fun columnBounds(column: Int) = tiles.filter { it.point.x == column }.toRangeBy { it.point.y }
 

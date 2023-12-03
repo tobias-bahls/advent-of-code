@@ -109,6 +109,23 @@ fun <T> Iterable<T>.chunksDelimitedBy(block: (T) -> Boolean): Sequence<List<T>> 
     }
 }
 
+fun <T> Iterable<T>.chunksSatisfying(block: (T) -> Boolean): Sequence<List<T>> {
+    var sequence = this.asSequence()
+
+    return generateSequence {
+        if (sequence.firstOrNull() == null) {
+            return@generateSequence null
+        }
+
+        sequence = sequence.dropWhile { !block(it) }
+
+        val chunk = sequence.takeWhile(block).toList()
+        sequence = sequence.dropWhile { block(it) }
+
+        chunk.ifEmpty { null }
+    }
+}
+
 fun List<Boolean>.interpretAsBinary() =
     joinToString("") {
             if (it) {

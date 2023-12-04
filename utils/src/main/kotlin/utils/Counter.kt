@@ -16,6 +16,8 @@ class Counter<T> {
 
     operator fun contains(elem: T) = counts.containsKey(elem)
 
+    operator fun get(elem: T) = counts.getOrDefault(elem, 0)
+
     fun incrementBy(elem: T, by: Int) {
         if (_counts[elem] == null) {
             _counts[elem] = by

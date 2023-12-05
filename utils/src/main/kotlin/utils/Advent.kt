@@ -7,6 +7,9 @@ enum class Part {
     PART2
 }
 
+fun unreachable(text: String? = null): Nothing =
+    if (text != null) error("unreachable: $text") else error("unreachable")
+
 fun <T> T.dump(): T = this.also { println(this) }
 
 fun <T> T.dump(prefix: String): T = this.also { println("$prefix: $this") }

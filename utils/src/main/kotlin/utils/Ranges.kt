@@ -8,5 +8,10 @@ fun ClosedRange<Int>.extend(by: Int) = IntRange(start, endInclusive).extend(by)
 
 fun IntRange.extend(by: Int) = (start - by..endInclusive + by)
 
+fun LongRange.offset(offs: Long) = (start + offs..endInclusive + offs)
+
+fun LongRange.fastIntersection(other: LongRange) =
+    maxOf(this.first, other.first)..minOf(this.last, other.last)
+
 fun parseClosedIntRange(raw: String) =
     raw.match("""(\d+)-(\d+)""").toPair().map { it.toInt() }.let { (a, b) -> a..b }

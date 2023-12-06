@@ -74,7 +74,6 @@ fun main() {
             .asSequence()
             .map { runUntilTerminationOrLoop(it) }
             .find { it.terminated }
-            ?.accumulator
-            ?: error("Could not find program that terminates")
+            ?.accumulator ?: error("Could not find program that terminates")
     }
 }

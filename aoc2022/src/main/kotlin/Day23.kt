@@ -34,8 +34,7 @@ private fun step(grid: Grid<Elf>): Grid<Elf> {
                         }
 
                     elf.directNeighboursInDirections(lookAt).isEmpty()
-                }
-                    ?: return@groupBy null
+                } ?: return@groupBy null
 
             elf.pointInCardinalDirection(moveDirection)
         }

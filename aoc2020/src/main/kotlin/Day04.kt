@@ -20,16 +20,15 @@ private fun validateOneOf(vararg options: String): (String) -> Boolean = { value
     value in options.toSet()
 }
 
-private fun validateHeight(): (String) -> Boolean =
-    lambda@{ value ->
-        val (height, num) = value.matchOrNull("""([0-9]+)(in|cm)""") ?: return@lambda false
+private fun validateHeight(): (String) -> Boolean = lambda@{ value ->
+    val (height, num) = value.matchOrNull("""([0-9]+)(in|cm)""") ?: return@lambda false
 
-        when (num) {
-            "cm" -> height.toInt() in 150..193
-            "in" -> height.toInt() in 59..76
-            else -> error("Unreachable: $num")
-        }
+    when (num) {
+        "cm" -> height.toInt() in 150..193
+        "in" -> height.toInt() in 59..76
+        else -> error("Unreachable: $num")
     }
+}
 
 private enum class PassportFieldType(private val validationFun: (String) -> Boolean) {
     BYR(validateBetween(1920..2002)),

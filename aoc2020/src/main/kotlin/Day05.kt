@@ -49,8 +49,7 @@ private data class BoardingPass(val rows: List<Row>, val columns: List<Column>) 
                 }
             }
             .toList()
-            .singleOrNull()
-            ?: error("Did not end up with single value")
+            .singleOrNull() ?: error("Did not end up with single value")
 }
 
 private fun parseBoardingPass(input: String): BoardingPass {
@@ -74,7 +73,6 @@ fun main() {
             .windowed(2)
             .find { (a, b) -> a + 1 != b }
             ?.first()
-            ?.plus(1)
-            ?: error("Could not find missing boarding pass")
+            ?.plus(1) ?: error("Could not find missing boarding pass")
     }
 }

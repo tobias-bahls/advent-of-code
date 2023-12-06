@@ -19,8 +19,7 @@ fun main() {
 
                 num !in preambleSums
             }
-            ?.last()
-            ?: error("Could not find result")
+            ?.last() ?: error("Could not find result")
     }
 
     part2 {

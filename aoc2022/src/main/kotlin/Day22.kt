@@ -60,8 +60,7 @@ private data class PositionInGrove(val point: Point2D, val facingDirection: Faci
         CubeFace.entries.find {
             point.x in (it.left(faceSize)..it.right(faceSize)) &&
                 point.y in (it.top(faceSize)..it.bottom(faceSize))
-        }
-            ?: error("Could not determine face for $point")
+        } ?: error("Could not determine face for $point")
 
     fun score() = (1000 * (point.y + 1)) + 4 * (point.x + 1) + directionScore()
 

@@ -13,8 +13,7 @@ fun main() {
         val found =
             input.lines().cartesian(input.lines()).find { (a, b) ->
                 a.zip(b).count { (aChar, bChar) -> aChar != bChar } == 1
-            }
-                ?: error("Could not find matching boxes")
+            } ?: error("Could not find matching boxes")
 
         found.let { (a, b) ->
             a.zip(b)

@@ -58,8 +58,7 @@ fun main() {
             return ticketFieldsToRules[currentField]!!
                 .filter { it !in usedRules }
                 .map { rule -> solve(ruleMap + (currentField to rule), currentField + 1) }
-                .find { it.isNotEmpty() }
-                ?: emptyMap()
+                .find { it.isNotEmpty() } ?: emptyMap()
         }
 
         val result = solve(mapOf(), 0)

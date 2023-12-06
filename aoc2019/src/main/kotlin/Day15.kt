@@ -65,8 +65,7 @@ private fun pathTo(
                     }
                     .map { Scored(1, it) }
             }
-        }
-            ?: error("No path from $current to $dest")
+        } ?: error("No path from $current to $dest")
 
     return path.windowed(2).map { (a, b) ->
         CardinalDirectionOrthogonal.ALL.find { b - a == it.movementVector }

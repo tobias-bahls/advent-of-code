@@ -43,8 +43,7 @@ data class Day20Maze(val grid: Grid<Day20Tile>) {
                 val exit =
                     (tile.adjacentOrthogonally() + otherPart.adjacentOrthogonally()).find {
                         it.data is Day20Tile.Floor
-                    }
-                        ?: error("No exit found for $tile")
+                    } ?: error("No exit found for $tile")
 
                 Portal(setOf(tile, otherPart), exit)
             }

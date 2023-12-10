@@ -49,6 +49,14 @@ sealed interface CardinalDirection {
                         West -> North
                     }
             }
+
+        fun opposite() =
+            when (this) {
+                North -> South
+                East -> West
+                South -> North
+                West -> East
+            }
     }
 
     data object North : CardinalDirectionOrthogonal
@@ -101,7 +109,7 @@ data class Tile<T>(val point: Point2D, val data: T) {
 
     fun adjacent(): List<Tile<T>> = point.neighbours.mapNotNull { grid.tileAt(it) }
 
-    fun directNeighboursInDirections(directions: List<CardinalDirection>): List<Tile<T>> =
+    fun directNeighboursInDirections(directions: Collection<CardinalDirection>): List<Tile<T>> =
         directions.mapNotNull { directNeighbourInDirection(it) }
 
     fun directNeighbourInDirection(cardinalDirection: CardinalDirection): Tile<T>? =
@@ -200,6 +208,8 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
     fun southEdge() = tiles.filter { it.point.y == height - 1 }
 
     fun westEdge() = tiles.filter { it.point.x == 0 }
+
+    fun edges() = northEdge() + eastEdge() + southEdge() + westEdge()
 
     fun addTile(point: Point2D, data: T) {
         val tile = Tile(point, data)

@@ -195,7 +195,9 @@ class Grid<T>(tiles: List<Tile<T>>, val width: Int, val height: Int) {
 
     fun row(row: Int) = tiles.filter { it.point.y == row }
 
-    fun columnBounds(column: Int) = tiles.filter { it.point.x == column }.toRangeBy { it.point.y }
+    fun columnBounds(column: Int) = column(column).toRangeBy { it.point.y }
+
+    fun column(column: Int) = tiles.filter { it.point.x == column }
 
     fun inBounds(point: Point2D) = point.x in xRange && point.y in yRange
 

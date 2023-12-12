@@ -160,3 +160,16 @@ fun <T> Iterable<T>.permutations(): Iterable<List<T>> {
 
     return inner(emptyList(), this.toList())
 }
+
+fun <T> List<T>.takeWhileInclusive(predicate: (T) -> Boolean) =
+    asSequence().takeWhileInclusive(predicate)
+
+fun <T> Sequence<T>.takeWhileInclusive(predicate: (T) -> Boolean) = sequence {
+    with(iterator()) {
+        while (hasNext()) {
+            val next = next()
+            yield(next)
+            if (!predicate(next)) break
+        }
+    }
+}

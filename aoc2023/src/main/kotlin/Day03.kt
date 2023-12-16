@@ -6,7 +6,7 @@ import utils.part1
 import utils.part2
 import utils.readResourceAsString
 
-sealed interface Day03Tile {
+private sealed interface Day03Tile {
     data object Floor : Day03Tile
 
     data class Digit(val digit: Int) : Day03Tile

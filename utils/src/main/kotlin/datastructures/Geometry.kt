@@ -79,6 +79,14 @@ data class Point2D(val x: Int, val y: Int) {
         return if (d < 0) d + 360 else d
     }
 
+    fun neighbourInDirection(dir: CardinalDirectionOrthogonal) =
+        when (dir) {
+            East -> right
+            North -> top
+            South -> bottom
+            West -> left
+        }
+
     override fun toString() = "($x,$y)"
 }
 

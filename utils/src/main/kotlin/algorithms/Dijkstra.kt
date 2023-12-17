@@ -36,6 +36,12 @@ fun <T : Any> dijkstra(block: DijkstraBuilder<T>.() -> Unit): T? {
     }
 }
 
+fun <T : Any> dijkstraRaw(block: DijkstraBuilder<T>.() -> Unit): DijkstraResult<T> {
+    val builder = DijkstraBuilder<T>().apply(block)
+
+    return builder.buildAndRun()
+}
+
 @DslMarker annotation class DijkstraDsl
 
 @DijkstraDsl
@@ -83,10 +89,16 @@ class DijkstraBuilder<T : Any> {
 
 sealed interface DijkstraResult<T> {
     val prev: Map<T, T>
+    val dist: Map<T, Int>
 
-    data class Success<T>(val found: T, override val prev: Map<T, T>) : DijkstraResult<T>
+    data class Success<T>(
+        val found: T,
+        override val prev: Map<T, T>,
+        override val dist: Map<T, Int>
+    ) : DijkstraResult<T>
 
-    data class Failure<T>(override val prev: Map<T, T>) : DijkstraResult<T>
+    data class Failure<T>(override val prev: Map<T, T>, override val dist: Map<T, Int>) :
+        DijkstraResult<T>
 }
 
 class Dijkstra<T : Any>(
@@ -111,7 +123,7 @@ class Dijkstra<T : Any>(
             inspection?.let { it(u) }
 
             if (endCondition(u)) {
-                return DijkstraResult.Success(u, prev)
+                return DijkstraResult.Success(u, prev, dist)
             }
 
             neighbours(u).forEach {
@@ -123,6 +135,6 @@ class Dijkstra<T : Any>(
                 }
             }
         }
-        return DijkstraResult.Failure(prev)
+        return DijkstraResult.Failure(prev, dist)
     }
 }

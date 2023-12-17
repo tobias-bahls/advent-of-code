@@ -40,6 +40,8 @@ fun <T> repeatedList(n: Int, block: () -> T) = 1.rangeTo(n).map { block() }
 
 data class Scored<T>(val score: Int, val neighbour: T)
 
+fun <T> T.scored(score: Int) = Scored(score, this)
+
 fun <T> floodFill(initial: T, determineNeighbours: (T) -> List<T>): Set<T> =
     floodFill(initial, determineNeighbours, listOf { _ -> false })
 

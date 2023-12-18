@@ -103,7 +103,11 @@ data class Rectangle(val position: Point2D, val width: Int, val height: Int) {
     val points by lazy { xRange.flatMap { x -> yRange.map { y -> Point2D(x, y) } } }
 }
 
-data class Line(val from: Point2D, val to: Point2D)
+data class Line(val from: Point2D, val to: Point2D) {
+    fun contains(point: Point2D) =
+        point.x in minOf(from.x, to.x)..maxOf(from.x, to.x) &&
+            point.y in minOf(from.y, to.y)..maxOf(from.y, to.y)
+}
 
 fun parsePoint2D(input: String) =
     input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }

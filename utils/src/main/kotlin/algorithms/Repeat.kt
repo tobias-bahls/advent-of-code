@@ -17,7 +17,7 @@ class RepeatOperations<T> {
     fun stop() = RepeatOperation.Stop
 
     fun incrementIteration() {
-        currentIteration++
+        currentIteration = Math.addExact(currentIteration, 1)
     }
 }
 

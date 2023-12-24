@@ -194,7 +194,7 @@ val CardinalDirection.movementVector
 
 fun parsePoint3D(input: String) =
     input
-        .match("""(-?\d+),(-?\d+),(-?\d+)""")
+        .match("""(-?\d+),\s*(-?\d+),\s*(-?\d+)""")
         .toList()
         .map { it.toInt() }
         .let { (x, y, z) -> Point3D(x, y, z) }

@@ -2,7 +2,7 @@ import com.diffplug.gradle.spotless.SpotlessExtension
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.1.0"
     id("com.diffplug.spotless") version "6.25.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.18" apply false
     id("com.github.ben-manes.versions") version "0.51.0" apply false
@@ -36,10 +36,10 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("org.jetbrains:annotations:24.1.0")
+        compileOnly("org.jetbrains:annotations:26.0.1")
 
-        implementation("io.kotest:kotest-assertions-core-jvm:5.8.1")
+        implementation("io.kotest:kotest-assertions-core-jvm:5.9.1")
         implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
-        implementation("tools.aqua:z3-turnkey:4.13.0")
+        implementation("tools.aqua:z3-turnkey:4.13.0.1")
     }
 }

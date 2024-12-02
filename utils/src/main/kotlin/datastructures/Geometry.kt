@@ -110,7 +110,11 @@ data class Line(val from: Point2D, val to: Point2D) {
 }
 
 fun parsePoint2D(input: String) =
-    input.match("""(-?\d+),(-?\d+)""").toPair().map { it.toInt() }.let { (x, y) -> Point2D(x, y) }
+    input
+        .match("""(-?\d+),\s*(-?\d+)""")
+        .toPair()
+        .map { it.toInt() }
+        .let { (x, y) -> Point2D(x, y) }
 
 data class Point3D(val x: Int, val y: Int, val z: Int) {
     companion object {

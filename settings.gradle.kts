@@ -13,3 +13,5 @@ include("aoc2021")
 include("aoc2022")
 
 include("aoc2023")
+
+include("aoc2024")

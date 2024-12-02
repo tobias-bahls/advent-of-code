@@ -40,3 +40,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Advent of Code ##
+**/resources/day**.txt

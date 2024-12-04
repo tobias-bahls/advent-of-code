@@ -2,7 +2,7 @@ import utils.*
 
 fun main() {
     part1 {
-        val input = readResourceAsString("/day04.txt")
+        val input = readResourceAsString("/day03.txt")
         Regex("mul\\((\\d{1,3}),(\\d{1,3})\\)").findAll(input).sumOf { result ->
             val (a, b) = result.destructured.toPair().map { it.toInt() }
             a * b
@@ -10,7 +10,7 @@ fun main() {
     }
 
     part2 {
-        val input = readResourceAsString("/day04.txt")
+        val input = readResourceAsString("/day03.txt")
 
         data class State(val enabled: Boolean = true, val accumulator: Int = 0)
         Regex("mul\\((\\d{1,3}),(\\d{1,3})\\)|do\\(\\)|don't\\(\\)")

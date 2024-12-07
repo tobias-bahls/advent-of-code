@@ -6,6 +6,8 @@ fun List<Char>.filterWhitespace() = this.filter { !it.isWhitespace() }
 
 fun List<String>.mapInts() = this.map { it.toInt() }
 
+fun List<String>.mapLongs() = this.map { it.toLong() }
+
 fun <T> List<T>.toPair(): Pair<T, T> = this.expectSize(2).let { (a, b) -> Pair(a, b) }
 
 fun <T> List<T>.applyEach(block: (T) -> Unit): List<T> =
